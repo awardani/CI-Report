@@ -1,5 +1,5 @@
 import React from 'react';
-import { MessageSquare, ThumbsUp, Clock, FileText } from 'lucide-react';
+import { MessageSquare, ThumbsUp, Clock, FileText, Bot, CheckCircle } from 'lucide-react';
 
 const MetricCard = ({ title, value, icon, color }) => (
   <div className="metric-card glass-panel">
@@ -13,7 +13,7 @@ const MetricCard = ({ title, value, icon, color }) => (
   </div>
 );
 
-export const KeyMetrics = ({ metrics }) => {
+export const KeyMetrics = ({ metrics, finMetrics }) => {
   return (
     <div className="metrics-grid">
       <MetricCard 
@@ -40,6 +40,22 @@ export const KeyMetrics = ({ metrics }) => {
         icon={<FileText size={24} />} 
         color="#f59e0b" 
       />
+      {finMetrics && (
+        <>
+          <MetricCard 
+            title="AI Deflections" 
+            value={finMetrics.deflectionCount.toLocaleString()} 
+            icon={<Bot size={24} />} 
+            color="#ec4899" 
+          />
+          <MetricCard 
+            title="Fin AI Resolution Rate" 
+            value={`${finMetrics.agentResolutionRate}%`} 
+            icon={<CheckCircle size={24} />} 
+            color="#06b6d4" 
+          />
+        </>
+      )}
     </div>
   );
 };

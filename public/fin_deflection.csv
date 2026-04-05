@@ -1,0 +1,609 @@
+Conversation ID,Conversation started at (America/New_York),Fin AI Agent deflected,Topics,AI Subtopic,AI Topic
+215473296067748,2026-02-28 21:51:41,true,,Batch restoration and error handling,Batch processing
+215473295275865,2026-02-28 18:54:50,true,,"Search functionality and results issues, Placement and shipment fee concerns","Search functionality and results issues, Placement errors"
+215473295138958,2026-02-28 18:21:05,true,,Trial subscription cancellation,Subscription cancellation and refunds
+215473294362243,2026-02-28 15:45:13,true,,InventoryLab employee and user setup,User access
+215473293766657,2026-02-28 14:04:38,true,,"Active listing and offer visibility issues, Editing and identifying inventory quantities","SKU and ASIN issues, Inventory issues"
+215473293757556,2026-02-28 14:02:40,true,,"MSKU validation and error resolution, Batch closing, reopening, and restoration, Box handling and item movement in batches","SKU and ASIN issues, Batch processing"
+215473292950225,2026-02-28 12:19:11,true,,"General shipment issues and status, Box handling and item movement in batches","Shipment issues, Batch processing"
+215473291738899,2026-02-28 09:41:09,true,,Seller Central account linking and troubleshooting,Amazon operations
+215473290377479,2026-02-28 06:08:26,true,,Wholesale search and access options,Wholesale search and access options
+215473290366737,2026-02-28 06:06:22,true,,,
+215473290027482,2026-02-28 05:08:52,true,,Subscription charges and billing discrepancies,Subscription cancellation and refunds
+215473289926449,2026-02-28 04:57:29,true,,ScoutX and Scoutify functionality,ScoutIQ subscription
+215473289323784,2026-02-28 02:41:49,true,,"Trial subscription cancellation, Disputing and investigating account charges","Subscription cancellation and refunds, Billing disputes and refunds"
+215473288328327,2026-02-27 22:41:49,true,,,
+215473287120847,2026-02-27 18:45:51,true,refund,"Refunding charges and erroneous transactions, Payment confirmation and status updates","Billing disputes and refunds, Payment updates"
+215473286070297,2026-02-27 18:11:58,true,cancel,Account cancellation issues,Troubleshooting
+215473284887778,2026-02-27 17:01:25,true,,"Order and shipment synchronization across platforms, Subscription renewal periods and expiration details","Data syncing, Subscription status options"
+215473284752247,2026-02-27 16:44:34,true,,"Account reactivation and deactivation procedures, ScoutIQ subscription cancellation and payment problems","Account status, ScoutIQ subscription"
+215473283965032,2026-02-27 15:30:36,true,,,
+215473283707598,2026-02-27 15:08:25,true,,ScoutX and Scoutify functionality,ScoutIQ subscription
+215473283699270,2026-02-27 15:07:20,true,,"Credit card and card payment updates, Payment method changes and PayPal updates",Payment updates
+215473282674350,2026-02-27 13:44:26,true,,,
+215473281519133,2026-02-27 12:50:31,true,,"FBA shipment processing and complications, General batch issues and troubleshooting, Cache and browser troubleshooting","FBA operations, Batch processing, Troubleshooting"
+215473280527220,2026-02-27 11:56:20,true,,Placement and shipment fee concerns,Placement errors
+215473280510831,2026-02-27 11:55:00,true,,FNSKU label printing and troubleshooting,Labeling
+215473280102976,2026-02-27 11:20:11,true,,Box handling and item movement in batches,Batch processing
+215473280091180,2026-02-27 11:18:44,true,,"Profit and loss tax reporting and historical report access, Inventory valuation and reporting","Profit and loss tax reporting and historical report access, Inventory issues"
+215473279242799,2026-02-27 10:19:06,true,,"SmartRepricer and InventoryLab integration and access, Inventory data upload, import, and shipment creation workflows, Bulk cost and supplier data import","SmartRepricer, InventoryLab, Bulk upload"
+215473279031938,2026-02-27 10:08:20,true,,"Inventory data upload, import, and shipment creation workflows",InventoryLab
+215473277668449,2026-02-27 08:53:14,true,,,
+215473277297801,2026-02-27 08:33:03,true,,General shipment issues and status,Shipment issues
+215473273535310,2026-02-27 04:42:31,true,cancel,"Ending and canceling subscriptions across services, Subscription charges and billing discrepancies, Plan selection and change options","Subscription cancellation and refunds, Subscription status options"
+215473273260264,2026-02-27 04:09:50,true,,"Response time and process for received inquiries, Amazon-specific shipment problems and sending issues","Response time and process for received inquiries, Shipment issues"
+215473273135920,2026-02-27 03:58:50,true,,,
+215473272959118,2026-02-27 03:30:19,true,cancel,"Switching between monthly and yearly subscriptions, Plan selection and change options, Account cancellation issues","Subscription status options, Troubleshooting"
+215473272884568,2026-02-27 03:24:26,true,,MSKU validation and error resolution,SKU and ASIN issues
+215473272618306,2026-02-27 02:58:02,true,,General subscription cancellation and refunds,Subscription cancellation and refunds
+215473271626435,2026-02-26 23:29:07,true,,"Plan selection and change options, Switching between monthly and yearly subscriptions",Subscription status options
+215473271616686,2026-02-26 23:26:44,true,,FBA and FBM inventory coordination,FBA operations
+215473271028804,2026-02-26 22:07:57,true,,Access and connectivity issues with InventoryLab,InventoryLab
+215473270557650,2026-02-26 20:56:22,true,,"Search functionality and results issues, Restricted and excluded products handling","Search functionality and results issues, Restricted and excluded products handling"
+215473270127944,2026-02-26 20:08:29,true,,FBA and FBM inventory coordination,FBA operations
+215473269837697,2026-02-26 19:31:53,true,,Item error indicators and discrepancies,Troubleshooting
+215473268600870,2026-02-26 16:48:46,true,,Restoring batches with box and item retention,Batch processing
+215473268288358,2026-02-26 16:20:51,true,,"Batch closing, reopening, and restoration, Active listing and offer visibility issues","Batch processing, SKU and ASIN issues"
+215473267557784,2026-02-26 15:25:25,true,,Identifying and locating seller and merchant IDs,Seller ID
+215473267114938,2026-02-26 14:56:23,true,,"Inventory data upload, import, and shipment creation workflows",InventoryLab
+215473265672264,2026-02-26 13:23:47,true,,"Box handling and item movement in batches, General batch issues and troubleshooting, FNSKU label printing and troubleshooting","Batch processing, Labeling"
+215473265664994,2026-02-26 13:22:50,true,,Shipping label printing and downloading,Labeling
+215473265482651,2026-02-26 13:08:32,true,seller 365,"Walmart review automation and integration, SmartRepricer and InventoryLab integration and access","Review automation, SmartRepricer"
+215473265226267,2026-02-26 12:49:52,true,,Automated review and feedback requests,Review automation
+215473264510581,2026-02-26 12:02:52,true,,"Tactical Arbitrage subscriptions and accounts, Amazon account connection and authorization issues","Tactical Arbitrage subscriptions and accounts, Amazon operations"
+215473264301719,2026-02-26 11:46:40,true,cancel,"CSV file upload and import operations, Resolving stranded and unlisted inventory issues, InventoryLab subscription cancellation","Bulk upload, Inventory issues, Subscription cancellation and refunds"
+215473264226460,2026-02-26 11:38:18,true,,,
+215473261831600,2026-02-26 09:47:41,true,,"Tactical Arbitrage subscriptions and accounts, Search functionality and results issues","Tactical Arbitrage subscriptions and accounts, Search functionality and results issues"
+215473261642170,2026-02-26 09:38:22,true,,ScoutIQ subscription cancellation and payment problems,ScoutIQ subscription
+215473261460136,2026-02-26 09:28:21,true,,2D barcode label options and usage,Labeling
+215473258784914,2026-02-26 06:29:06,true,,"FBA and FBM inventory coordination, CSV file upload and import operations","FBA operations, Bulk upload"
+215473257902312,2026-02-26 04:33:51,true,,Ending and canceling subscriptions across services,Subscription cancellation and refunds
+215473257346900,2026-02-26 03:46:34,true,,,
+215473256821538,2026-02-26 02:25:46,true,,,
+215473256795424,2026-02-26 02:19:45,true,,Plan selection and change options,Subscription status options
+215473256499426,2026-02-26 01:36:51,true,,General subscription cancellation and refunds,Subscription cancellation and refunds
+215473256187965,2026-02-26 00:38:18,true,,Batch restoration and error handling,Batch processing
+215473255819169,2026-02-25 23:33:21,true,cancel,ScoutIQ subscription cancellation and payment problems,ScoutIQ subscription
+215473255645571,2026-02-25 22:52:22,true,,Automated review and feedback requests,Review automation
+215473255196090,2026-02-25 21:41:32,true,,ASIN and SKU pricing discrepancies,SmartRepricer
+215473254691487,2026-02-25 20:51:16,true,,"Seller 365 plans and pricing, Bulk cost and supplier data import, InventoryLab subscription transition to Seller 365","Seller 365, Bulk upload"
+215473253183137,2026-02-25 19:29:40,true,,,
+215473252472287,2026-02-25 17:52:15,true,,"Switching between monthly and yearly subscriptions, Changing associated account email addresses, Login and password troubleshooting","Subscription status options, Email settings, InventoryLab"
+215473252293039,2026-02-25 17:26:01,true,,"Subscription activation and reactivation issues, FeedbackWhiz account setup and subscription","Subscription status options, FeedbackWhiz account setup and subscription"
+215473251837689,2026-02-25 16:25:49,true,,Scanning and scan option issues,Troubleshooting
+215473251240661,2026-02-25 15:21:26,true,,Box handling and item movement in batches,Batch processing
+215473251218357,2026-02-25 15:18:24,true,,Batch submission issues,Batch processing
+215473251063947,2026-02-25 15:08:24,true,,"Amazon seller account reconnection and unlinking, FeedbackWhiz account setup and subscription, Amazon account connection and authorization issues","Amazon operations, FeedbackWhiz account setup and subscription"
+215473251018515,2026-02-25 15:03:22,true,,"International marketplace compatibility and InventoryLab support, Marketplace connection and syncing errors","InventoryLab, Amazon operations"
+215473250962679,2026-02-25 14:59:01,true,,Active listing and offer visibility issues,SKU and ASIN issues
+215473250834578,2026-02-25 14:44:49,true,,Access and connectivity issues with InventoryLab,InventoryLab
+215473250237315,2026-02-25 13:43:07,true,,"MFN batch troubleshooting, Batch submission issues, Batch restoration and error handling","Troubleshooting, Batch processing"
+215473250217954,2026-02-25 13:40:42,true,,"Profit and sales discrepancies analysis, Amazon data and inventory synchronization issues, Inventory data upload, import, and shipment creation workflows","Profit and sales discrepancies analysis, Data syncing, InventoryLab"
+215473250190346,2026-02-25 13:37:38,true,,Shipment error messages and troubleshooting,Shipment issues
+215473250065759,2026-02-25 13:25:40,true,,"InventoryLab subscription transition to Seller 365, Subscription charges and billing discrepancies, Inventory data upload, import, and shipment creation workflows","Seller 365, Subscription cancellation and refunds, InventoryLab"
+215473249684006,2026-02-25 13:01:37,true,,FBA shipment processing and complications,FBA operations
+215473247914008,2026-02-25 11:40:11,true,,,
+215473247489283,2026-02-25 11:27:29,true,,"FeedbackWhiz account setup and subscription, FBA and FBM inventory coordination, Seller 365 bundle features and inclusions","FeedbackWhiz account setup and subscription, FBA operations, Seller 365"
+215473244976469,2026-02-25 10:01:13,true,,Switching between monthly and yearly subscriptions,Subscription status options
+215473244459251,2026-02-25 09:35:08,true,,,
+215473243226329,2026-02-25 08:19:55,true,,Batch processing errors and problem resolution,Batch processing
+215473241933778,2026-02-25 06:40:59,true,,Shipping label printing and downloading,Labeling
+215473238933729,2026-02-25 00:22:39,true,cancel,"Subscription refund eligibility and availability, Subscription cancellation status check, Subscription cancellation requests and account deletion","Subscription cancellation and refunds, Cancellation confirmation"
+215473238920737,2026-02-25 00:19:31,true,cancel,"Subscription cancellation requests and account deletion, Trial subscription cancellation, Tactical Arbitrage subscriptions and accounts","Subscription cancellation and refunds, Tactical Arbitrage subscriptions and accounts"
+215473237704711,2026-02-24 20:45:11,true,,"Profit and sales discrepancies analysis, ASIN and SKU pricing discrepancies","Profit and sales discrepancies analysis, SmartRepricer"
+215473235926843,2026-02-24 17:47:03,true,,Amazon shipment splits and optimized shipping options,InventoryLab
+215473235826115,2026-02-24 17:34:05,true,,"Subscription activation and reactivation issues, Account reactivation and deactivation procedures, Switching between monthly and yearly subscriptions","Subscription status options, Account status"
+215473234193907,2026-02-24 14:55:18,true,,,
+215473233739987,2026-02-24 14:23:45,true,,"ASIN and SKU pricing discrepancies, Bulk cost and supplier data import","SmartRepricer, Bulk upload"
+215473233387525,2026-02-24 13:39:58,true,,FBA and FBM inventory coordination,FBA operations
+215473233152841,2026-02-24 13:14:47,true,,"Inventory data upload, import, and shipment creation workflows",InventoryLab
+215473233092929,2026-02-24 13:11:10,true,,Amazon-specific shipment problems and sending issues,Shipment issues
+215473232580299,2026-02-24 12:46:05,true,,InventoryLab subscription transition to Seller 365,Seller 365
+215473232487957,2026-02-24 12:42:43,true,,"Batch item and button issues, Box handling and item movement in batches","Troubleshooting, Batch processing"
+215473232430675,2026-02-24 12:40:18,true,,InventoryLab subscription transition to Seller 365,Seller 365
+215473231545549,2026-02-24 12:09:26,true,,"Subscription renewal process and troubleshooting, ScoutIQ subscription cancellation and payment problems, ScoutIQ subscription setup and account access","Subscription status options, ScoutIQ subscription"
+215473231292249,2026-02-24 11:56:24,true,,"Shipment batch issues and closing procedures, Batch restoration and error handling",Batch processing
+215473231212619,2026-02-24 11:52:35,true,cancel,Subscription cancellation options and button issues,Subscription cancellation and refunds
+215473230676859,2026-02-24 11:24:21,true,,Shipping label printing and downloading,Labeling
+215473230384767,2026-02-24 11:08:34,true,,,
+215473230350903,2026-02-24 11:07:27,true,,Campaign email delivery issues,Troubleshooting
+215473230043963,2026-02-24 10:56:54,true,,Minimum and maximum price configuration,SmartRepricer
+215473229932545,2026-02-24 10:50:52,true,refund,Amazon account integration and linking requirements,Amazon operations
+215473229805976,2026-02-24 10:44:36,true,,"Bulk book listing and ISBN uploads, Inventory data upload, import, and shipment creation workflows","Bulk upload, InventoryLab"
+215473228880170,2026-02-24 09:45:00,true,,FNSKU label printing and troubleshooting,Labeling
+215473228643819,2026-02-24 09:23:20,true,,Account cancellation confirmation,Cancellation confirmation
+215473228228103,2026-02-24 09:02:26,true,,"General shipment issues and status, Placement and shipment fee concerns","Shipment issues, Placement errors"
+215473226778717,2026-02-24 08:14:30,true,,,
+215473225882365,2026-02-24 07:06:00,true,,Pending offer creation issues,Troubleshooting
+215473225015979,2026-02-24 05:15:59,true,,"Placement and shipment fee concerns, International marketplace compatibility and InventoryLab support","Placement errors, InventoryLab"
+215473224899723,2026-02-24 05:01:18,true,,"Tactical Arbitrage subscriptions and accounts, Trial subscription cancellation","Tactical Arbitrage subscriptions and accounts, Subscription cancellation and refunds"
+215473224889909,2026-02-24 05:00:11,true,,,
+215473224115265,2026-02-24 03:13:58,true,,"Amazon product approval process, Profit and sales discrepancies analysis","Amazon operations, Profit and sales discrepancies analysis"
+215473222959367,2026-02-23 23:52:18,true,,"Item error indicators and discrepancies, Shipment error messages and troubleshooting, General shipment issues and status","Troubleshooting, Shipment issues"
+215473222801207,2026-02-23 23:13:39,true,,"Account email changes and linking, Unlinking and connecting seller and merchant IDs","InventoryLab, Seller ID"
+215473222466085,2026-02-23 22:14:05,true,,,
+215473218975881,2026-02-23 17:03:32,true,cancel,"ScoutIQ subscription cancellation and payment problems, Subscription charges and billing discrepancies, Subscription activation and reactivation issues","ScoutIQ subscription, Subscription cancellation and refunds, Subscription status options"
+215473218806329,2026-02-23 16:53:39,true,,Shipping label printing and downloading,Labeling
+215473218726009,2026-02-23 16:42:35,true,,"Item revalidation troubleshooting, Batch item and button issues, Restoring batches with box and item retention","Troubleshooting, Batch processing"
+215473218523995,2026-02-23 16:17:13,true,,Inactive account troubleshooting,Account status
+215473218489571,2026-02-23 16:15:07,true,,ScoutX and Scoutify functionality,ScoutIQ subscription
+215473218377204,2026-02-23 16:08:43,true,,Automated review and feedback requests,Review automation
+215473218172960,2026-02-23 15:50:48,true,,"General batch issues and troubleshooting, Batch submission issues, Amazon seller account reconnection and unlinking","Batch processing, Amazon operations"
+215473218042165,2026-02-23 15:33:17,true,,FBA pricing and sales discrepancies,FBA operations
+215473217984699,2026-02-23 15:26:09,true,,,
+215473217599938,2026-02-23 14:57:43,true,,Account deletion process,Account status
+215473217144193,2026-02-23 14:12:46,true,,Error message troubleshooting,Troubleshooting
+215473216905342,2026-02-23 14:02:57,true,,,
+215473215527994,2026-02-23 12:53:06,true,,Bulk cost and supplier data import,Bulk upload
+215473215393748,2026-02-23 12:40:00,true,,Campaign email delivery issues,Troubleshooting
+215473215237419,2026-02-23 12:24:34,true,,Automated review and feedback requests,Review automation
+215473215002105,2026-02-23 12:05:54,true,,"Inventory valuation and reporting, Amazon batch processing and workflow interruptions","Inventory issues, Amazon operations"
+215473214917823,2026-02-23 12:02:52,true,,"Batch item and button issues, General batch issues and troubleshooting, Pending offer creation issues","Troubleshooting, Batch processing"
+215473214353443,2026-02-23 11:26:31,true,cancel,"Subscription cancellation verification, Subscription end, auto-renewal, and data access","Cancellation confirmation, Subscription cancellation and refunds"
+215473212441150,2026-02-23 09:47:25,true,,Coaching and meeting scheduling requests,Coaching and meeting scheduling requests
+215473208147597,2026-02-23 03:18:05,true,,Printer and printing troubleshooting,Troubleshooting
+215473207092179,2026-02-23 01:36:41,true,,"ScoutIQ subscription setup and account access, Scoutify login and access issues",ScoutIQ subscription
+215473206803672,2026-02-23 00:35:15,true,,"FBA and FBM inventory coordination, Bulk cost and supplier data import","FBA operations, Bulk upload"
+215473206450025,2026-02-22 23:04:42,true,,Profit and sales discrepancies analysis,Profit and sales discrepancies analysis
+215473206287709,2026-02-22 22:31:46,true,cancel,General subscription cancellation and refunds,Subscription cancellation and refunds
+215473206255937,2026-02-22 22:28:58,true,,ScoutIQ subscription setup and account access,ScoutIQ subscription
+215473206068196,2026-02-22 22:09:36,true,,"Amazon batch verification and submission errors, Service outage updates and response times, InventoryLab subscription transition to Seller 365","Amazon operations, Service issues, Seller 365"
+215473205994933,2026-02-22 21:56:23,true,,ScoutX and Scoutify functionality,ScoutIQ subscription
+215473205880567,2026-02-22 21:31:20,true,,ASIN import and invalid ASIN errors,SKU and ASIN issues
+215473205642801,2026-02-22 20:49:07,true,,Tactical Arbitrage subscriptions and accounts,Tactical Arbitrage subscriptions and accounts
+215473205107653,2026-02-22 20:21:35,true,,SKU creation and attribute errors,SKU and ASIN issues
+215473202892679,2026-02-22 14:40:59,true,seller 365,"Tactical Arbitrage subscriptions and accounts, Changing associated account email addresses","Tactical Arbitrage subscriptions and accounts, Email settings"
+215473202517275,2026-02-22 13:43:38,true,,Active listing and offer visibility issues,SKU and ASIN issues
+215473201539282,2026-02-22 11:22:57,true,,"Credit card and card payment updates, Payment confirmation and status updates, Payment method changes and PayPal updates",Payment updates
+215473201370752,2026-02-22 10:59:11,true,,"Bulk cost and supplier data import, Inventory valuation and reporting","Bulk upload, Inventory issues"
+215473199275585,2026-02-22 06:17:30,true,,"Amazon account integration and linking requirements, Unlinking and connecting seller and merchant IDs","Amazon operations, Seller ID"
+215473197243047,2026-02-21 21:55:40,true,seller 365,Upgrading and transitioning to Seller 365,Seller 365
+215473196841662,2026-02-21 20:46:21,true,,Coaching and meeting scheduling requests,Coaching and meeting scheduling requests
+215473196692764,2026-02-21 20:08:29,true,seller 365,"Seller 365 subscription process and resubscription, ScoutX and Scoutify functionality, ScoutIQ subscription cancellation and payment problems","Seller 365, ScoutIQ subscription"
+215473196648362,2026-02-21 19:56:32,true,,"SmartRepricer and InventoryLab integration and access, FBA pricing and sales discrepancies","SmartRepricer, FBA operations"
+215473195894667,2026-02-21 17:08:29,true,,"MFN batch troubleshooting, Locating closed, open, and archived batches","Troubleshooting, Batch processing"
+215473195774967,2026-02-21 16:45:23,true,,Shipping label printing and downloading,Labeling
+215473195442886,2026-02-21 15:49:55,true,,Shipment error messages and troubleshooting,Shipment issues
+215473195417846,2026-02-21 15:44:08,true,,Minimum and maximum price configuration,SmartRepricer
+215473195384748,2026-02-21 15:37:13,true,,"Minimum and maximum price configuration, Bulk cost and supplier data import","SmartRepricer, Bulk upload"
+215473195112660,2026-02-21 15:01:01,true,,"Inventory data upload, import, and shipment creation workflows",InventoryLab
+215473194606224,2026-02-21 13:37:32,true,,Subscription activation and reactivation issues,Subscription status options
+215473194141164,2026-02-21 12:15:28,true,,"Restoring batches with box and item retention, ScoutX and Scoutify functionality","Batch processing, ScoutIQ subscription"
+215473193851522,2026-02-21 11:53:37,true,cancel,ScoutIQ subscription cancellation and payment problems,ScoutIQ subscription
+215473193371907,2026-02-21 10:43:24,true,,,
+215473193251278,2026-02-21 10:21:56,true,,"Amazon account integration and linking requirements, FNSKU label printing and troubleshooting","Amazon operations, Labeling"
+215473191247627,2026-02-21 04:45:11,true,cancel,Account cancellation confirmation,Cancellation confirmation
+215473190189791,2026-02-20 23:54:18,true,,"Inventory data upload, import, and shipment creation workflows",InventoryLab
+215473189400393,2026-02-20 21:27:38,true,"refund, cancel",General subscription cancellation and refunds,Subscription cancellation and refunds
+215473187106032,2026-02-20 17:53:27,true,,Changing associated account email addresses,Email settings
+215473186664976,2026-02-20 17:05:57,true,,Scanning and scan option issues,Troubleshooting
+215473186429342,2026-02-20 16:37:13,true,,Profit and loss tax reporting and historical report access,Profit and loss tax reporting and historical report access
+215473185166154,2026-02-20 15:38:06,true,seller 365,"Subscription refund eligibility and availability, Refund request status and processing, Depot order conversion requests","Subscription cancellation and refunds, Billing disputes and refunds, Depot order conversion requests"
+215473184033714,2026-02-20 13:43:14,true,,Access and connectivity issues with InventoryLab,InventoryLab
+215473183520721,2026-02-20 13:01:54,true,,FeedbackWhiz account setup and subscription,FeedbackWhiz account setup and subscription
+215473182252695,2026-02-20 12:05:08,true,,,
+215473181326808,2026-02-20 10:49:24,true,,FBA and FBM inventory coordination,FBA operations
+215473181071312,2026-02-20 10:28:02,true,,Profit and sales discrepancies analysis,Profit and sales discrepancies analysis
+215473180530841,2026-02-20 10:06:20,true,,"FNSKU label printing and troubleshooting, Shipping label printing and downloading",Labeling
+215473180087408,2026-02-20 09:36:21,true,,Restoring batches with box and item retention,Batch processing
+215473179819462,2026-02-20 09:16:26,true,,"Batch processing errors and problem resolution, Restoring batches with box and item retention",Batch processing
+215473178930652,2026-02-20 08:26:26,true,,SmartRepricer settings and error resolution,SmartRepricer
+215473178842197,2026-02-20 08:21:53,true,cancel,General subscription cancellation and refunds,Subscription cancellation and refunds
+215473178228222,2026-02-20 07:44:29,true,,"FBA shipment processing and complications, Inventory loading and population errors, General shipment issues and status","FBA operations, InventoryLab, Shipment issues"
+215473176597367,2026-02-20 04:27:07,true,,"Order visibility and health issues, Seller Central shipping workflow and status checks, Amazon shipment communication and stuck process issues","Troubleshooting, Shipment issues, Amazon operations"
+215473175289458,2026-02-20 01:12:15,true,,FNSKU label printing and troubleshooting,Labeling
+215473174685569,2026-02-19 23:06:27,true,,Scoutify login and access issues,ScoutIQ subscription
+215473174521505,2026-02-19 22:37:32,true,cancel,Subscription cancellation charges,Cancellation confirmation
+215473174403041,2026-02-19 22:10:47,true,,Profit and sales discrepancies analysis,Profit and sales discrepancies analysis
+215473174042921,2026-02-19 21:13:26,true,"refund, cancel","Subscription cancellation verification, Subscription cancellation charges, Refunds after subscription cancellation or failed cancellation","Cancellation confirmation, Subscription cancellation and refunds"
+215473173256400,2026-02-19 19:25:18,true,,Access and connectivity issues with InventoryLab,InventoryLab
+215473173087355,2026-02-19 19:16:37,true,,Batch processing errors and problem resolution,Batch processing
+215473172463512,2026-02-19 18:41:31,true,,Tactical Arbitrage subscriptions and accounts,Tactical Arbitrage subscriptions and accounts
+215473172192500,2026-02-19 18:09:15,true,,,
+215473171978764,2026-02-19 17:39:32,true,,"Amazon-specific shipment problems and sending issues, Restoring batches with box and item retention","Shipment issues, Batch processing"
+215473171949582,2026-02-19 17:34:59,true,,"Minimum and maximum price configuration, Bulk cost and supplier data import","SmartRepricer, Bulk upload"
+215473171011680,2026-02-19 15:57:54,true,,"Box handling and item movement in batches, Restoring batches with box and item retention",Batch processing
+215473170745851,2026-02-19 15:37:50,true,refund,"Reimbursement tracking and recovery, Account credits and service credit handling, FBA pricing and sales discrepancies","Reimbursement tracking and recovery, Payment updates, FBA operations"
+215473170282519,2026-02-19 15:16:14,true,,Order visibility and health issues,Troubleshooting
+215473169989642,2026-02-19 15:06:10,true,,Batch item and button issues,Troubleshooting
+215473169705515,2026-02-19 14:42:23,true,,Amazon product approval process,Amazon operations
+215473169331220,2026-02-19 14:08:32,true,,,
+215473168728878,2026-02-19 13:25:00,true,,Restoring batches with box and item retention,Batch processing
+215473168287261,2026-02-19 13:09:36,true,,"Trial subscription cancellation, Amazon account integration and linking requirements, Getting started and registering with Seller 365","Subscription cancellation and refunds, Amazon operations, Seller 365"
+215473167777638,2026-02-19 12:26:46,true,refund,"Subscription charges and billing discrepancies, Subscription activation and reactivation issues","Subscription cancellation and refunds, Subscription status options"
+215473167608705,2026-02-19 12:09:35,true,,ASIN import and invalid ASIN errors,SKU and ASIN issues
+215473167578741,2026-02-19 12:08:09,true,,FNSKU label printing and troubleshooting,Labeling
+215473167305833,2026-02-19 11:54:34,true,,SKU creation and attribute errors,SKU and ASIN issues
+215473167278529,2026-02-19 11:52:53,true,cancel,"Profit and loss tax reporting and historical report access, Inventory valuation and reporting, Amazon seller account reconnection and unlinking","Profit and loss tax reporting and historical report access, Inventory issues, Amazon operations"
+215473167091315,2026-02-19 11:36:55,true,,Subscription renewal periods and expiration details,Subscription status options
+215473167077304,2026-02-19 11:35:25,true,cancel,General subscription cancellation and refunds,Subscription cancellation and refunds
+215473166738184,2026-02-19 11:07:31,true,,Reimbursement tracking and recovery,Reimbursement tracking and recovery
+215473166275940,2026-02-19 10:38:11,true,,Trial subscription cancellation,Subscription cancellation and refunds
+215473166055580,2026-02-19 10:19:36,true,,"Order and shipment synchronization across platforms, SmartRepricer and InventoryLab integration and access","Data syncing, SmartRepricer"
+215473165688795,2026-02-19 09:55:07,true,,Wholesale search and access options,Wholesale search and access options
+215473163290734,2026-02-19 06:40:27,true,,"Amazon seller account reconnection and unlinking, Cache and browser troubleshooting","Amazon operations, Troubleshooting"
+215473162032374,2026-02-19 04:04:49,true,,"FBA and FBM inventory coordination, Pending offer creation issues, FeedbackWhiz account setup and subscription","FBA operations, Troubleshooting, FeedbackWhiz account setup and subscription"
+215473161337577,2026-02-19 02:50:11,true,,Profit and loss tax reporting and historical report access,Profit and loss tax reporting and historical report access
+215473161194347,2026-02-19 02:23:06,true,seller 365,"Amazon data and inventory synchronization issues, Inventory valuation and reporting, Inventory data upload, import, and shipment creation workflows","Data syncing, Inventory issues, InventoryLab"
+215473160476760,2026-02-19 00:46:22,true,,"Restock and insights reporting features, Inventory valuation and reporting","InventoryLab, Inventory issues"
+215473159466953,2026-02-18 22:04:22,true,cancel,"Payment method changes and PayPal updates, Subscription end, auto-renewal, and data access","Payment updates, Subscription cancellation and refunds"
+215473158881501,2026-02-18 20:09:27,true,,"SKU creation and attribute errors, Batch submission issues","SKU and ASIN issues, Batch processing"
+215473158671253,2026-02-18 19:32:16,true,,,
+215473156824036,2026-02-18 18:30:38,true,,Subscription renewal process and troubleshooting,Subscription status options
+215473156657098,2026-02-18 18:20:10,true,,Automated review and feedback requests,Review automation
+215473156401833,2026-02-18 17:57:46,true,,SKU creation and attribute errors,SKU and ASIN issues
+215473156367428,2026-02-18 17:51:39,true,,Amazon product approval process,Amazon operations
+215473155909695,2026-02-18 16:41:19,true,,Access and connectivity issues with InventoryLab,InventoryLab
+215473155613829,2026-02-18 16:10:10,true,,Shipping label printing and downloading,Labeling
+215473155587537,2026-02-18 16:08:57,true,,"ScoutX and Scoutify functionality, ScoutIQ subscription setup and account access",ScoutIQ subscription
+215473155407668,2026-02-18 15:57:06,true,,"International marketplace compatibility and InventoryLab support, Subscription renewal periods and expiration details","InventoryLab, Subscription status options"
+215473155232005,2026-02-18 15:39:20,true,,Inventory loading and population errors,InventoryLab
+215473154565715,2026-02-18 14:30:01,true,,"ScoutX and Scoutify functionality, Unexpected price changes and pricing errors","ScoutIQ subscription, SmartRepricer"
+215473153894065,2026-02-18 13:50:46,true,,General subscription cancellation and refunds,Subscription cancellation and refunds
+215473152904827,2026-02-18 12:56:19,true,,"Reimbursement tracking and recovery, Seller 365 plans and pricing","Reimbursement tracking and recovery, Seller 365"
+215473152855139,2026-02-18 12:52:09,true,,User invitation and access options,User access
+215473152514968,2026-02-18 12:22:16,true,,,
+215473152466581,2026-02-18 12:17:25,true,,User account creation and assignment,User access
+215473152383070,2026-02-18 12:08:47,true,,,
+215473151393905,2026-02-18 10:40:09,true,cancel,Subscription cancellation verification,Cancellation confirmation
+215473151009216,2026-02-18 10:12:45,true,,Account email changes and linking,InventoryLab
+215473150257719,2026-02-18 09:19:26,true,,"Payment issues and troubleshooting, Order visibility and health issues","Payment updates, Troubleshooting"
+215473147534972,2026-02-18 05:01:17,true,,Amazon account connection and authorization issues,Amazon operations
+215473147259297,2026-02-18 04:24:09,true,cancel,Ending and canceling subscriptions across services,Subscription cancellation and refunds
+215473146982380,2026-02-18 03:44:44,true,,Reimbursement tracking and recovery,Reimbursement tracking and recovery
+215473145433006,2026-02-17 23:07:46,true,,"ScoutIQ subscription cancellation and payment problems, Switching between monthly and yearly subscriptions, Resolving billing issues and concerns","ScoutIQ subscription, Subscription status options, Billing disputes and refunds"
+215473145289568,2026-02-17 22:36:43,true,,International marketplace compatibility and InventoryLab support,InventoryLab
+215473144990550,2026-02-17 21:55:25,true,cancel,ScoutIQ subscription cancellation and payment problems,ScoutIQ subscription
+215473144801004,2026-02-17 21:36:37,true,,"Pending offer creation issues, Access and connectivity issues with InventoryLab, Amazon account connection and authorization issues","Troubleshooting, InventoryLab, Amazon operations"
+215473144311129,2026-02-17 20:30:51,true,,,
+215473143925966,2026-02-17 19:37:09,true,,International marketplace compatibility and InventoryLab support,InventoryLab
+215473143873084,2026-02-17 19:30:43,true,,FBA and FBM inventory coordination,FBA operations
+215473143396635,2026-02-17 18:23:25,true,,Reimbursement tracking and recovery,Reimbursement tracking and recovery
+215473143027278,2026-02-17 17:34:50,true,,Amazon seller account reconnection and unlinking,Amazon operations
+215473142869604,2026-02-17 17:10:07,true,,FNSKU label printing and troubleshooting,Labeling
+215473142806869,2026-02-17 17:03:01,true,refund,"Reimbursement tracking and recovery, Subscription charges and billing discrepancies","Reimbursement tracking and recovery, Subscription cancellation and refunds"
+215473142764062,2026-02-17 16:58:53,true,cancel,Subscription cancellation status check,Cancellation confirmation
+215473142586738,2026-02-17 16:37:57,true,cancel,General subscription cancellation and refunds,Subscription cancellation and refunds
+215473141719676,2026-02-17 15:49:47,true,,Box handling and item movement in batches,Batch processing
+215473140790303,2026-02-17 14:59:50,true,,,
+215473140402163,2026-02-17 14:27:14,true,,Profit and sales discrepancies analysis,Profit and sales discrepancies analysis
+215473140352385,2026-02-17 14:23:39,true,,SKU creation and attribute errors,SKU and ASIN issues
+215473140160461,2026-02-17 14:06:58,true,,"Reimbursement tracking and recovery, Campaign email delivery issues","Reimbursement tracking and recovery, Troubleshooting"
+215473139552343,2026-02-17 13:09:49,true,,Inventory valuation and reporting,Inventory issues
+215473139337790,2026-02-17 12:52:23,true,,"FBA and FBM inventory coordination, Inventory data upload, import, and shipment creation workflows, Shipping label printing and downloading","FBA operations, InventoryLab, Labeling"
+215473139260028,2026-02-17 12:44:27,true,,ScoutIQ subscription cancellation and payment problems,ScoutIQ subscription
+215473137019878,2026-02-17 10:14:09,true,,"Subscription charges and billing discrepancies, ScoutIQ subscription cancellation and payment problems","Subscription cancellation and refunds, ScoutIQ subscription"
+215473136721517,2026-02-17 09:59:37,true,,Packing list printing and issues,Labeling
+215473136371224,2026-02-17 09:30:18,true,,"Buy box performance and optimization, Minimum and maximum price configuration","Buy box performance and optimization, SmartRepricer"
+215473135647822,2026-02-17 08:27:06,true,,,
+215473132844034,2026-02-17 03:52:07,true,,"Order visibility and health issues, Seller Central shipping workflow and status checks","Troubleshooting, Shipment issues"
+215473131227082,2026-02-16 22:52:23,true,,Profit and loss tax reporting and historical report access,Profit and loss tax reporting and historical report access
+215473130724160,2026-02-16 21:21:15,true,,"Box handling and item movement in batches, SKU creation and attribute errors","Batch processing, SKU and ASIN issues"
+215473130558232,2026-02-16 21:07:55,true,,,
+215473130049056,2026-02-16 19:40:07,true,,Campaign email delivery issues,Troubleshooting
+215473129926937,2026-02-16 19:16:20,true,,"Changing associated account email addresses, Amazon shipment communication and stuck process issues","Email settings, Amazon operations"
+215473129768545,2026-02-16 19:05:41,true,,Restock and insights reporting features,InventoryLab
+215473129013701,2026-02-16 17:50:54,true,,Subscription renewal process and troubleshooting,Subscription status options
+215473127919871,2026-02-16 17:04:21,true,,Switching between monthly and yearly subscriptions,Subscription status options
+215473127895373,2026-02-16 17:02:17,true,,General subscription cancellation and refunds,Subscription cancellation and refunds
+215473127665533,2026-02-16 16:28:23,true,,Shipment batch issues and closing procedures,Batch processing
+215473127431467,2026-02-16 15:57:40,true,,Batch submission issues,Batch processing
+215473127427549,2026-02-16 15:57:00,true,,,
+215473127229777,2026-02-16 15:33:51,true,,"Item revalidation troubleshooting, Item error indicators and discrepancies",Troubleshooting
+215473127217879,2026-02-16 15:32:03,true,,"Wholesale search and access options, Login and password troubleshooting","Wholesale search and access options, InventoryLab"
+215473126622263,2026-02-16 14:10:07,true,,Printer and printing troubleshooting,Troubleshooting
+215473125371962,2026-02-16 12:22:39,true,,Batch restoration and error handling,Batch processing
+215473125099853,2026-02-16 12:04:28,true,,"Batch item and button issues, Batch submission issues, MFN batch troubleshooting","Troubleshooting, Batch processing"
+215473125045413,2026-02-16 12:02:28,true,seller 365,"Reimbursement tracking and recovery, Seller 365 plans and pricing","Reimbursement tracking and recovery, Seller 365"
+215473124400056,2026-02-16 11:09:49,true,,InventoryLab employee and user setup,User access
+215473124297092,2026-02-16 11:04:00,true,,"Tactical Arbitrage subscriptions and accounts, CSV file upload and import operations","Tactical Arbitrage subscriptions and accounts, Bulk upload"
+215473124170923,2026-02-16 10:53:24,true,,Shipping label printing and downloading,Labeling
+215473123685172,2026-02-16 10:11:05,true,,,
+215473123476137,2026-02-16 10:01:13,true,seller 365,"Tactical Arbitrage subscriptions and accounts, InventoryLab subscription transition to Seller 365","Tactical Arbitrage subscriptions and accounts, Seller 365"
+215473123348623,2026-02-16 09:49:00,true,,,
+215473122743337,2026-02-16 09:09:54,true,,"Search functionality and results issues, Bulk cost and supplier data import","Search functionality and results issues, Bulk upload"
+215473121878399,2026-02-16 08:17:43,true,,FNSKU label printing and troubleshooting,Labeling
+215473121706965,2026-02-16 08:06:20,true,,Automated review and feedback requests,Review automation
+215473119342021,2026-02-16 03:32:33,true,,Amazon account connection and authorization issues,Amazon operations
+215473116568444,2026-02-15 21:17:18,true,,,
+215473116449040,2026-02-15 21:06:52,true,,Shipping label printing and downloading,Labeling
+215473115919183,2026-02-15 19:20:43,true,,Order and shipment synchronization across platforms,Data syncing
+215473115804150,2026-02-15 18:57:26,true,,Error message troubleshooting,Troubleshooting
+215473115069154,2026-02-15 16:39:20,true,,Search functionality and results issues,Search functionality and results issues
+215473115010413,2026-02-15 16:26:13,true,,,
+215473114974077,2026-02-15 16:17:53,true,,,
+215473114875037,2026-02-15 15:58:04,true,,Inventory valuation and reporting,Inventory issues
+215473114787821,2026-02-15 15:48:10,true,,Login and password troubleshooting,InventoryLab
+215473114145109,2026-02-15 14:03:40,true,,"Transportation option confirmation issues, Confirm placement operation failures, Shipment batch issues and closing procedures","Placement errors, Batch processing"
+215473113578192,2026-02-15 13:08:27,true,,Tactical Arbitrage subscriptions and accounts,Tactical Arbitrage subscriptions and accounts
+215473113389004,2026-02-15 12:31:47,true,,,
+215473113268289,2026-02-15 12:09:44,true,,"Seller 365 plans and pricing, Amazon account integration and linking requirements, Trial subscription cancellation","Seller 365, Amazon operations, Subscription cancellation and refunds"
+215473112543042,2026-02-15 10:54:06,true,,"Shipment error messages and troubleshooting, Inventory loading and population errors","Shipment issues, InventoryLab"
+215473112025492,2026-02-15 09:52:39,true,,"ScoutIQ subscription setup and account access, Scoutify login and access issues",ScoutIQ subscription
+215473110228138,2026-02-15 04:21:16,true,,ScoutX and Scoutify functionality,ScoutIQ subscription
+215473110108079,2026-02-15 03:55:44,true,seller 365,"International marketplace compatibility and InventoryLab support, Seller 365 account access and upgrades","InventoryLab, Seller 365"
+215473108894851,2026-02-14 22:54:44,true,,"SmartRepricer and InventoryLab integration and access, Profit and sales discrepancies analysis","SmartRepricer, Profit and sales discrepancies analysis"
+215473108734344,2026-02-14 22:01:58,true,"seller 365, refund","Disputing and investigating account charges, Changing associated account email addresses, ScoutIQ subscription setup and account access","Billing disputes and refunds, Email settings, ScoutIQ subscription"
+215473108684438,2026-02-14 21:46:10,true,,Tactical Arbitrage subscriptions and accounts,Tactical Arbitrage subscriptions and accounts
+215473108649222,2026-02-14 21:34:53,true,,ScoutX and Scoutify functionality,ScoutIQ subscription
+215473108242931,2026-02-14 19:42:54,true,,Batch item and button issues,Troubleshooting
+215473108207583,2026-02-14 19:34:56,true,refund,InventoryLab and supplier-related subscription refunds,Subscription cancellation and refunds
+215473108188159,2026-02-14 19:29:07,true,,"Item error indicators and discrepancies, Batch restoration and error handling","Troubleshooting, Batch processing"
+215473107693727,2026-02-14 17:37:52,true,,Service outage updates and response times,Service issues
+215473107487272,2026-02-14 17:05:30,true,,Batch submission issues,Batch processing
+215473107288704,2026-02-14 16:33:21,true,,Account deletion process,Account status
+215473107229686,2026-02-14 16:20:48,true,,"Bulk cost and supplier data import, Service outage updates and response times","Bulk upload, Service issues"
+215473107068638,2026-02-14 15:47:59,true,,"Restricted and excluded products handling, Cache and browser troubleshooting","Restricted and excluded products handling, Troubleshooting"
+215473105929460,2026-02-14 12:15:14,true,,Printer and printing troubleshooting,Troubleshooting
+215473105321728,2026-02-14 11:24:05,true,,"Batch processing errors and problem resolution, Pending offer creation issues, FBA shipment processing and complications","Batch processing, Troubleshooting, FBA operations"
+215473102759400,2026-02-14 04:54:20,true,cancel,General subscription cancellation and refunds,Subscription cancellation and refunds
+215473101126163,2026-02-13 21:43:06,true,,InventoryLab subscription cancellation,Subscription cancellation and refunds
+215473100594869,2026-02-13 19:57:40,true,,Error message troubleshooting,Troubleshooting
+215473100570127,2026-02-13 19:52:05,true,,Item revalidation troubleshooting,Troubleshooting
+215473100527299,2026-02-13 19:41:01,true,,Scoutify login and access issues,ScoutIQ subscription
+215473100106806,2026-02-13 19:09:10,true,seller 365,"Trial subscription cancellation, InventoryLab subscription transition to Seller 365, Seller 365 bundle features and inclusions","Subscription cancellation and refunds, Seller 365"
+215473098691007,2026-02-13 17:55:46,true,,,
+215473098686501,2026-02-13 17:54:59,true,cancel,,
+215473098282373,2026-02-13 16:54:19,true,,Resolving billing issues and concerns,Billing disputes and refunds
+215473096713986,2026-02-13 15:08:20,true,,,
+215473096468086,2026-02-13 14:43:15,true,,Shipping label printing and downloading,Labeling
+215473096135482,2026-02-13 14:13:46,true,,"Inactive account troubleshooting, ASIN and SKU pricing discrepancies","Account status, SmartRepricer"
+215473096005662,2026-02-13 14:10:06,true,,Profit and loss tax reporting and historical report access,Profit and loss tax reporting and historical report access
+215473095790276,2026-02-13 13:52:51,true,,General subscription cancellation and refunds,Subscription cancellation and refunds
+215473095742284,2026-02-13 13:46:29,true,,Automated review and feedback requests,Review automation
+215473095513185,2026-02-13 13:23:07,true,,Scanning and scan option issues,Troubleshooting
+215473095213980,2026-02-13 13:02:29,true,,Amazon account integration and linking requirements,Amazon operations
+215473095031918,2026-02-13 12:46:25,true,,Seller 365 Pro and Teams plan comparison,Seller 365
+215473094495384,2026-02-13 12:22:08,true,refund,Subscription refund eligibility and availability,Subscription cancellation and refunds
+215473094060198,2026-02-13 11:54:11,true,refund,"Bulk cost and supplier data import, Profit and sales discrepancies analysis, Profit and loss tax reporting and historical report access","Bulk upload, Profit and sales discrepancies analysis, Profit and loss tax reporting and historical report access"
+215473093877201,2026-02-13 11:43:06,true,,"SKU creation and attribute errors, Marketplace connection and syncing errors","SKU and ASIN issues, Amazon operations"
+215473092642181,2026-02-13 10:27:45,true,,"Batch submission issues, Batch processing errors and problem resolution, Amazon batch verification and submission errors","Batch processing, Amazon operations"
+215473092280252,2026-02-13 10:11:14,true,seller 365,"DataSpark integration and access in Seller 365, Walmart review automation and integration","Seller 365, Review automation"
+215473092270752,2026-02-13 10:10:48,true,,"Inventory data upload, import, and shipment creation workflows, Bulk cost and supplier data import","InventoryLab, Bulk upload"
+215473092211325,2026-02-13 10:07:55,true,,,
+215473091680439,2026-02-13 09:22:30,true,,"Search functionality and results issues, ScoutX and Scoutify functionality","Search functionality and results issues, ScoutIQ subscription"
+215473088298588,2026-02-13 05:57:02,true,,"Tactical Arbitrage subscriptions and accounts, TA versions and feature differences",Tactical Arbitrage subscriptions and accounts
+215473085827477,2026-02-13 00:10:25,true,,Amazon product approval process,Amazon operations
+215473085702792,2026-02-12 23:51:02,true,,,
+215473085683746,2026-02-12 23:47:22,true,,Payment method changes and PayPal updates,Payment updates
+215473085661034,2026-02-12 23:42:07,true,,Account reactivation and deactivation procedures,Account status
+215473085640230,2026-02-12 23:37:47,true,,Payment method changes and PayPal updates,Payment updates
+215473085402469,2026-02-12 22:59:33,true,seller 365,"Trial subscription cancellation, Accessing and managing Seller 365 apps, Amazon account integration and linking requirements","Subscription cancellation and refunds, Seller 365, Amazon operations"
+215473085273177,2026-02-12 22:29:53,true,,"Plan selection and change options, Amazon seller account reconnection and unlinking","Subscription status options, Amazon operations"
+215473084603109,2026-02-12 20:58:59,true,cancel,Refunds after subscription cancellation or failed cancellation,Subscription cancellation and refunds
+215473084544003,2026-02-12 20:45:23,true,,Subscription activation and reactivation issues,Subscription status options
+215473083780919,2026-02-12 19:17:01,true,,"Amazon data and inventory synchronization issues, Automated review and feedback requests, InventoryLab and supplier-related subscription refunds","Data syncing, Review automation, Subscription cancellation and refunds"
+215473083523983,2026-02-12 18:54:45,true,cancel,"Inventory data upload, import, and shipment creation workflows, Active listing and offer visibility issues, Error message troubleshooting","InventoryLab, SKU and ASIN issues, Troubleshooting"
+215473082970660,2026-02-12 18:11:21,true,,Website loading and accessibility issues,Troubleshooting
+215473082050828,2026-02-12 16:42:55,true,,"Profit and sales discrepancies analysis, MSKU validation and error resolution","Profit and sales discrepancies analysis, SKU and ASIN issues"
+215473081818790,2026-02-12 16:13:52,true,,Transportation option confirmation issues,Placement errors
+215473081424176,2026-02-12 15:48:22,true,,,
+215473081216809,2026-02-12 15:36:46,true,,,
+215473080098160,2026-02-12 14:53:27,true,,"ScoutX and Scoutify functionality, Seller 365 Pro and Teams plan comparison, User invitation and access options","ScoutIQ subscription, Seller 365, User access"
+215473079987787,2026-02-12 14:46:32,true,,Confirm placement operation failures,Placement errors
+215473079686931,2026-02-12 14:31:17,true,,General shipment issues and status,Shipment issues
+215473079510592,2026-02-12 14:19:35,true,seller 365,Seller 365 plans and pricing,Seller 365
+215473079462201,2026-02-12 14:15:40,true,,Automated review and feedback requests,Review automation
+215473079418672,2026-02-12 14:11:41,true,,Shipping label printing and downloading,Labeling
+215473079267214,2026-02-12 14:03:50,true,,Access and connectivity issues with InventoryLab,InventoryLab
+215473079076740,2026-02-12 13:47:58,true,,General batch issues and troubleshooting,Batch processing
+215473079031026,2026-02-12 13:45:04,true,,Placement and shipment fee concerns,Placement errors
+215473078623511,2026-02-12 13:16:37,true,,Batch item and button issues,Troubleshooting
+215473078460923,2026-02-12 13:03:44,true,,,
+215473078438286,2026-02-12 13:02:13,true,,Plan selection and change options,Subscription status options
+215473078350045,2026-02-12 12:56:17,true,"refund, cancel","Refunds after subscription cancellation or failed cancellation, General subscription cancellation and refunds",Subscription cancellation and refunds
+215473078103757,2026-02-12 12:33:05,true,,"Merging and managing multiple accounts, Account deletion process","Merging and managing multiple accounts, Account status"
+215473078089135,2026-02-12 12:31:52,true,,Login and password troubleshooting,InventoryLab
+215473077393074,2026-02-12 11:40:38,true,cancel,"InventoryLab subscription cancellation, Inventory data upload, import, and shipment creation workflows","Subscription cancellation and refunds, InventoryLab"
+215473076698097,2026-02-12 11:11:11,true,,"MSKU validation and error resolution, Item revalidation troubleshooting","SKU and ASIN issues, Troubleshooting"
+215473075415125,2026-02-12 10:01:22,true,,Restoring batches with box and item retention,Batch processing
+215473073072223,2026-02-12 07:44:44,true,,"Batch submission issues, SKU creation and attribute errors","Batch processing, SKU and ASIN issues"
+215473071765031,2026-02-12 05:14:10,true,,"Unlinking and connecting seller and merchant IDs, Seller Central account linking and troubleshooting, Subscription end, auto-renewal, and data access","Seller ID, Amazon operations, Subscription cancellation and refunds"
+215473071429907,2026-02-12 04:35:13,true,,"Batch item and button issues, Error message troubleshooting",Troubleshooting
+215473071265668,2026-02-12 04:16:14,true,,"ASIN and SKU pricing discrepancies, Address verification issues and error resolution","SmartRepricer, Address verification issues and error resolution"
+215473069552978,2026-02-11 23:43:43,true,refund,"Subscription refund eligibility and availability, Switching between monthly and yearly subscriptions","Subscription cancellation and refunds, Subscription status options"
+215473069089816,2026-02-11 22:35:23,true,,Batch item and button issues,Troubleshooting
+215473068815327,2026-02-11 21:45:02,true,,"Batch item and button issues, ASIN and SKU pricing discrepancies, ASIN import and invalid ASIN errors","Troubleshooting, SmartRepricer, SKU and ASIN issues"
+215473068433300,2026-02-11 20:59:25,true,,"Batch item and button issues, Batch processing errors and problem resolution, Cache and browser troubleshooting","Troubleshooting, Batch processing"
+215473068423688,2026-02-11 20:59:09,true,cancel,ScoutIQ subscription cancellation and payment problems,ScoutIQ subscription
+215473066812307,2026-02-11 19:23:35,true,,FNSKU label printing and troubleshooting,Labeling
+215473066320756,2026-02-11 18:50:07,true,,"MFN batch troubleshooting, Batch item and button issues, General batch issues and troubleshooting","Troubleshooting, Batch processing"
+215473066222390,2026-02-11 18:40:55,true,,Shipping label printing and downloading,Labeling
+215473065993441,2026-02-11 18:20:31,true,,"General shipment issues and status, International marketplace compatibility and InventoryLab support, Box handling and item movement in batches","Shipment issues, InventoryLab, Batch processing"
+215473065939690,2026-02-11 18:10:50,true,,Batch item and button issues,Troubleshooting
+215473065886801,2026-02-11 18:04:16,true,cancel,Ending and canceling subscriptions across services,Subscription cancellation and refunds
+215473065485179,2026-02-11 17:12:19,true,,,
+215473064604015,2026-02-11 15:38:31,true,,"Shipping label printing and downloading, Printer and printing troubleshooting","Labeling, Troubleshooting"
+215473063974449,2026-02-11 15:22:02,true,,Credit card and card payment updates,Payment updates
+215473061498405,2026-02-11 14:09:59,true,,"Seller Central shipping workflow and status checks, Amazon account connection and authorization issues","Shipment issues, Amazon operations"
+215473061163182,2026-02-11 13:51:54,true,,"Box handling and item movement in batches, Batch processing errors and problem resolution",Batch processing
+215473060838868,2026-02-11 13:30:54,true,seller 365,"ScoutIQ subscription setup and account access, Seller 365 account access and upgrades","ScoutIQ subscription, Seller 365"
+215473060050104,2026-02-11 12:26:34,true,,ASIN import and invalid ASIN errors,SKU and ASIN issues
+215473059990451,2026-02-11 12:23:09,true,,,
+215473059774197,2026-02-11 12:11:24,true,,Placement and shipment fee concerns,Placement errors
+215473059619282,2026-02-11 12:03:44,true,,Minimum and maximum price configuration,SmartRepricer
+215473059528479,2026-02-11 11:58:01,true,,"Item revalidation troubleshooting, ASIN import and invalid ASIN errors, Amazon product approval process","Troubleshooting, SKU and ASIN issues, Amazon operations"
+215473059453303,2026-02-11 11:50:53,true,,Printer and printing troubleshooting,Troubleshooting
+215473058623454,2026-02-11 10:54:07,true,,Merging and managing multiple accounts,Merging and managing multiple accounts
+215473057063324,2026-02-11 09:33:57,true,,Shipping label printing and downloading,Labeling
+215473056094361,2026-02-11 08:32:27,true,,Automated review and feedback requests,Review automation
+215473055059391,2026-02-11 07:37:23,true,,"Minimum and maximum price configuration, Bulk cost and supplier data import","SmartRepricer, Bulk upload"
+215473054419034,2026-02-11 06:42:30,true,,Changing associated account email addresses,Email settings
+215473053703723,2026-02-11 05:17:45,true,,Invoice payments and viewing,Invoice payments and viewing
+215473052183360,2026-02-11 02:14:36,true,,"Trial subscription cancellation, Inventory valuation and reporting","Subscription cancellation and refunds, Inventory issues"
+215473051137495,2026-02-10 23:14:19,true,,"Scoutify login and access issues, ScoutIQ subscription setup and account access",ScoutIQ subscription
+215473051078383,2026-02-10 23:00:56,true,,,
+215473050937665,2026-02-10 22:25:36,true,,"Batch closing, reopening, and restoration",Batch processing
+215473050671366,2026-02-10 21:31:13,true,,Profit and sales discrepancies analysis,Profit and sales discrepancies analysis
+215473049555662,2026-02-10 19:15:14,true,,"Inventory data upload, import, and shipment creation workflows, InventoryLab employee and user setup","InventoryLab, User access"
+215473049510316,2026-02-10 19:10:45,true,,"Minimum and maximum price configuration, ASIN and SKU pricing discrepancies, Unexpected price changes and pricing errors",SmartRepricer
+215473049193639,2026-02-10 18:26:38,true,,Account cancellation issues,Troubleshooting
+215473049005491,2026-02-10 18:01:31,true,,"Shipping label printing and downloading, Cache and browser troubleshooting","Labeling, Troubleshooting"
+215473047893134,2026-02-10 16:15:16,true,"refund, cancel","Refunds after subscription cancellation or failed cancellation, Subscription charges and billing discrepancies, Changing associated account email addresses","Subscription cancellation and refunds, Email settings"
+215473047888512,2026-02-10 16:14:57,true,,"Shipment batch issues and closing procedures, Packing option regeneration errors","Batch processing, Placement errors"
+215473047619437,2026-02-10 15:58:47,true,,"Inventory data upload, import, and shipment creation workflows, Walmart review automation and integration","InventoryLab, Review automation"
+215473047317855,2026-02-10 15:28:35,true,,Shipment error messages and troubleshooting,Shipment issues
+215473047257339,2026-02-10 15:20:48,true,,Item revalidation troubleshooting,Troubleshooting
+215473047034725,2026-02-10 15:05:55,true,,Subscription cancellation requests and account deletion,Subscription cancellation and refunds
+215473046935306,2026-02-10 14:57:44,true,,Bulk cost and supplier data import,Bulk upload
+215473046720581,2026-02-10 14:31:28,true,,,
+215473046140282,2026-02-10 13:58:53,true,,Access and connectivity issues with InventoryLab,InventoryLab
+215473045163360,2026-02-10 12:56:31,true,,Item revalidation troubleshooting,Troubleshooting
+215473045061623,2026-02-10 12:47:39,true,refund,FBA and FBM inventory coordination,FBA operations
+215473044649542,2026-02-10 12:21:03,true,,"Subscription cancellation charges, Refunding charges and erroneous transactions","Cancellation confirmation, Billing disputes and refunds"
+215473042957608,2026-02-10 10:36:12,true,,Unexpected price changes and pricing errors,SmartRepricer
+215473042566144,2026-02-10 10:25:56,true,,"Storage limits and volume restrictions, ASIN import and invalid ASIN errors","Inventory issues, SKU and ASIN issues"
+215473041729970,2026-02-10 10:01:08,true,,Walmart review automation and integration,Review automation
+215473041244268,2026-02-10 09:41:24,true,,"Item revalidation troubleshooting, Batch item and button issues",Troubleshooting
+215473040545624,2026-02-10 09:00:17,true,,"Depot order conversion requests, International marketplace compatibility and InventoryLab support","Depot order conversion requests, InventoryLab"
+215473040061015,2026-02-10 08:47:55,true,cancel,Subscription cancellation requests and account deletion,Subscription cancellation and refunds
+215473039383951,2026-02-10 08:26:54,true,,ScoutIQ subscription setup and account access,ScoutIQ subscription
+215473038865170,2026-02-10 08:07:21,true,,"Refunds after subscription cancellation or failed cancellation, Account cancellation confirmation, Address verification issues and error resolution","Subscription cancellation and refunds, Cancellation confirmation, Address verification issues and error resolution"
+215473038828691,2026-02-10 08:05:44,true,,Bulk cost and supplier data import,Bulk upload
+215473038613623,2026-02-10 07:46:12,true,seller 365,Automated review and feedback requests,Review automation
+215473037479877,2026-02-10 05:45:13,true,,"DataSpark integration and access in Seller 365, ScoutX and Scoutify functionality, Website loading and accessibility issues","Seller 365, ScoutIQ subscription, Troubleshooting"
+215473034886954,2026-02-09 23:08:36,true,,Order visibility and health issues,Troubleshooting
+215473034062920,2026-02-09 21:03:04,true,,Seller Central account linking and troubleshooting,Amazon operations
+215473034032577,2026-02-09 20:59:28,true,,"Profit and loss tax reporting and historical report access, Bulk cost and supplier data import","Profit and loss tax reporting and historical report access, Bulk upload"
+215473033945046,2026-02-09 20:39:47,true,,InventoryLab subscription transition to Seller 365,Seller 365
+215473033824964,2026-02-09 20:17:18,true,,Trial subscription cancellation,Subscription cancellation and refunds
+215473033740229,2026-02-09 20:02:27,true,,Account deletion process,Account status
+215473032707962,2026-02-09 19:13:17,true,,"MSKU validation and error resolution, Pending offer creation issues, FNSKU label printing and troubleshooting","SKU and ASIN issues, Troubleshooting, Labeling"
+215473032105636,2026-02-09 18:24:13,true,,"Account email changes and linking, Amazon account connection and authorization issues","InventoryLab, Amazon operations"
+215473031815729,2026-02-09 18:11:16,true,,InventoryLab subscription transition to Seller 365,Seller 365
+215473030579895,2026-02-09 16:13:40,true,,"ASIN and SKU pricing discrepancies, Restricted and excluded products handling","SmartRepricer, Restricted and excluded products handling"
+215473030386893,2026-02-09 15:48:19,true,,,
+215473029941202,2026-02-09 14:55:08,true,,Hazmat shipping requirements and carrier options,Hazmat shipping requirements and carrier options
+215473029468245,2026-02-09 14:21:31,true,,Amazon account integration and linking requirements,Amazon operations
+215473027959776,2026-02-09 12:32:53,true,cancel,Payment method changes and PayPal updates,Payment updates
+215473027076743,2026-02-09 11:44:09,true,,"Restock and insights reporting features, ScoutX and Scoutify functionality, ASIN and SKU pricing discrepancies","InventoryLab, ScoutIQ subscription, SmartRepricer"
+215473026006659,2026-02-09 10:38:18,true,,"FBA pricing and sales discrepancies, Shipment error messages and troubleshooting","FBA operations, Shipment issues"
+215473025661962,2026-02-09 10:19:02,true,,Bulk cost and supplier data import,Bulk upload
+215473024568771,2026-02-09 09:27:00,true,,Walmart review automation and integration,Review automation
+215473024430952,2026-02-09 09:18:32,true,,DataSpark integration and access in Seller 365,Seller 365
+215473023708626,2026-02-09 08:28:37,true,,"Amazon account connection and authorization issues, Amazon account integration and linking requirements",Amazon operations
+215473018757565,2026-02-09 01:32:55,true,,SmartRepricer settings and error resolution,SmartRepricer
+215473016890647,2026-02-08 19:38:56,true,,"Confirm placement operation failures, Shipment placement errors and resolution, Error message troubleshooting","Placement errors, Troubleshooting"
+215473016118299,2026-02-08 17:25:00,true,seller 365,Minimum and maximum price configuration,SmartRepricer
+215473015762409,2026-02-08 16:19:42,true,,Inventory valuation and reporting,Inventory issues
+215473015516707,2026-02-08 16:09:18,true,,Payment issues and troubleshooting,Payment updates
+215473013824260,2026-02-08 13:03:46,true,,"Trial subscription cancellation, Seller 365 plan selection issues, ScoutIQ subscription setup and account access","Subscription cancellation and refunds, Seller 365, ScoutIQ subscription"
+215473012911430,2026-02-08 11:08:01,true,,Shipping label printing and downloading,Labeling
+215473012729000,2026-02-08 10:47:12,true,,"Amazon shipment splits and optimized shipping options, Amazon-specific shipment problems and sending issues, Persistent issue resolution","InventoryLab, Shipment issues, Troubleshooting"
+215473012683105,2026-02-08 10:40:04,true,cancel,"Ending and canceling subscriptions across services, SmartRepricer and InventoryLab integration and access","Subscription cancellation and refunds, SmartRepricer"
+215473010849963,2026-02-08 06:14:56,true,,Bulk cost and supplier data import,Bulk upload
+215473010596104,2026-02-08 05:16:55,true,,,
+215473009777769,2026-02-08 02:11:09,true,,DataSpark integration and access in Seller 365,Seller 365
+215473009024961,2026-02-07 22:44:17,true,,CSV file upload and import operations,Bulk upload
+215473008806119,2026-02-07 21:29:08,true,,Trial subscription cancellation,Subscription cancellation and refunds
+215473008776071,2026-02-07 21:18:23,true,"refund, cancel",Subscription refund eligibility and availability,Subscription cancellation and refunds
+215473007943989,2026-02-07 17:46:16,true,,"Amazon batch verification and submission errors, FeedbackWhiz account setup and subscription","Amazon operations, FeedbackWhiz account setup and subscription"
+215473007641776,2026-02-07 17:07:09,true,,,
+215473007626516,2026-02-07 17:05:17,true,,"Restricted and excluded products handling, ScoutIQ subscription setup and account access","Restricted and excluded products handling, ScoutIQ subscription"
+215473006807014,2026-02-07 14:53:43,true,,"ScoutIQ subscription setup and account access, Service outage updates and response times, Plan selection and change options","ScoutIQ subscription, Service issues, Subscription status options"
+215473006517263,2026-02-07 13:56:35,true,,Subscription activation and reactivation issues,Subscription status options
+215473006240653,2026-02-07 13:06:09,true,,"TA versions and feature differences, Search functionality and results issues","Tactical Arbitrage subscriptions and accounts, Search functionality and results issues"
+215473006219811,2026-02-07 13:02:17,true,cancel,Ending and canceling subscriptions across services,Subscription cancellation and refunds
+215473004675149,2026-02-07 10:17:55,true,,"User invitation and access options, Plan selection and change options","User access, Subscription status options"
+215473002153658,2026-02-07 02:38:24,true,,International marketplace compatibility and InventoryLab support,InventoryLab
+215473001182184,2026-02-06 22:03:02,true,,ScoutIQ subscription cancellation and payment problems,ScoutIQ subscription
+215473001054487,2026-02-06 21:25:47,true,refund,"InventoryLab and supplier-related subscription refunds, InventoryLab subscription cancellation, Subscription cancellation verification","Subscription cancellation and refunds, Cancellation confirmation"
+215473001052974,2026-02-06 21:25:18,true,,Tactical Arbitrage subscriptions and accounts,Tactical Arbitrage subscriptions and accounts
+215472999560932,2026-02-06 19:10:58,true,,Profit and sales discrepancies analysis,Profit and sales discrepancies analysis
+215472999361315,2026-02-06 18:44:36,true,,Scanning and scan option issues,Troubleshooting
+215472998818807,2026-02-06 18:03:26,true,"seller 365, cancel","Subscription cancellation verification, Trial subscription cancellation, Upgrading and transitioning to Seller 365","Cancellation confirmation, Subscription cancellation and refunds, Seller 365"
+215472998517348,2026-02-06 17:07:56,true,,Subscription renewal process and troubleshooting,Subscription status options
+215472998514481,2026-02-06 17:07:26,true,,Access and connectivity issues with InventoryLab,InventoryLab
+215472998287932,2026-02-06 16:41:20,true,cancel,Subscription cancellation requests and account deletion,Subscription cancellation and refunds
+215472997585158,2026-02-06 16:09:34,true,,SmartRepricer settings and error resolution,SmartRepricer
+215472996951619,2026-02-06 15:11:38,true,,"Item revalidation troubleshooting, Batch restoration and error handling, Amazon shipment communication and stuck process issues","Troubleshooting, Batch processing, Amazon operations"
+215472995427867,2026-02-06 13:58:11,true,,ScoutIQ subscription cancellation and payment problems,ScoutIQ subscription
+215472993790588,2026-02-06 12:38:28,true,cancel,Account cancellation issues,Troubleshooting
+215472993129271,2026-02-06 11:57:57,true,,Invoice payments and viewing,Invoice payments and viewing
+215472992978651,2026-02-06 11:41:32,true,cancel,Refunds and charges after cancellation,Billing disputes and refunds
+215472992758050,2026-02-06 11:20:55,true,,"Trial subscription cancellation, Subscription charges and billing discrepancies",Subscription cancellation and refunds
+215472992732955,2026-02-06 11:19:19,true,,"Switching between monthly and yearly subscriptions, Seller 365 plan selection issues","Subscription status options, Seller 365"
+215472992673405,2026-02-06 11:16:46,true,,Trial subscription cancellation,Subscription cancellation and refunds
+215472991074440,2026-02-06 09:27:53,true,,"Seller Central account linking and troubleshooting, Unlinking and connecting seller and merchant IDs","Amazon operations, Seller ID"
+215472990713231,2026-02-06 09:03:22,true,,Account deletion process,Account status
+215472984910395,2026-02-05 21:54:40,true,,Bulk cost and supplier data import,Bulk upload
+215472984093039,2026-02-05 19:19:21,true,,InventoryLab subscription transition to Seller 365,Seller 365
+215472983391445,2026-02-05 17:44:50,true,,"Order and shipment synchronization across platforms, SmartRepricer settings and error resolution","Data syncing, SmartRepricer"
+215472983305869,2026-02-05 17:30:10,true,,Campaign email delivery issues,Troubleshooting
+215472983292846,2026-02-05 17:27:52,true,,Pending offer creation issues,Troubleshooting
+215472983226406,2026-02-05 17:17:34,true,,Subscription activation and reactivation issues,Subscription status options
+215472983216437,2026-02-05 17:15:59,true,,Account and data deletion confirmation,Account status
+215472982470083,2026-02-05 15:48:16,true,,Box handling and item movement in batches,Batch processing
+215472981929123,2026-02-05 14:45:46,true,,Shipping label printing and downloading,Labeling
+215472981902720,2026-02-05 14:44:12,true,,Wholesale search and access options,Wholesale search and access options
+215472981233706,2026-02-05 13:59:40,true,,"ASIN and SKU pricing discrepancies, Minimum and maximum price configuration",SmartRepricer
+215472979513786,2026-02-05 12:11:30,true,,"International marketplace compatibility and InventoryLab support, Tactical Arbitrage subscriptions and accounts","InventoryLab, Tactical Arbitrage subscriptions and accounts"
+215472979477492,2026-02-05 12:07:46,true,,Minimum and maximum price configuration,SmartRepricer
+215472979467927,2026-02-05 12:06:49,true,,,
+215472977491846,2026-02-05 10:17:52,true,,Login and password troubleshooting,InventoryLab
+215472977333849,2026-02-05 10:15:18,true,,,
+215472973452576,2026-02-05 07:04:57,true,,,
+215472973070248,2026-02-05 06:14:05,true,,"Changing associated account email addresses, Automated review and feedback requests, Campaign email delivery issues","Email settings, Review automation, Troubleshooting"
+215472969747249,2026-02-04 21:25:34,true,,"Tactical Arbitrage subscriptions and accounts, Account reactivation and deactivation procedures","Tactical Arbitrage subscriptions and accounts, Account status"
+215472969681537,2026-02-04 21:18:51,true,,"Placement and shipment fee concerns, Disputing and investigating account charges","Placement errors, Billing disputes and refunds"
+215472969477725,2026-02-04 20:36:39,true,,"Amazon-specific shipment problems and sending issues, Batch processing errors and problem resolution, Batch submission issues","Shipment issues, Batch processing"
+215472967381579,2026-02-04 18:11:31,true,,"Shipment batch issues and closing procedures, Amazon batch processing and workflow interruptions, Inventory loading and population errors","Batch processing, Amazon operations, InventoryLab"
+215472966888219,2026-02-04 17:10:44,true,,"InventoryLab subscription transition to Seller 365, General subscription cancellation and refunds","Seller 365, Subscription cancellation and refunds"
+215472966877663,2026-02-04 17:09:15,true,,,
+215472966786397,2026-02-04 16:58:05,true,cancel,"Subscription cancellation options and button issues, Seller 365 plans and pricing","Subscription cancellation and refunds, Seller 365"
+215472966571448,2026-02-04 16:29:48,true,,Website loading and accessibility issues,Troubleshooting
+215472966529197,2026-02-04 16:24:02,true,,Search functionality and results issues,Search functionality and results issues
+215472965247680,2026-02-04 14:52:00,true,,Detailed issue investigation and resolution,Service issues
+215472964773730,2026-02-04 14:24:47,true,,SmartRepricer and InventoryLab integration and access,SmartRepricer
+215472963394872,2026-02-04 13:47:39,true,,"Active listing and offer visibility issues, Inventory loading and population errors","SKU and ASIN issues, InventoryLab"
+215472962393269,2026-02-04 13:17:11,true,,ScoutX and Scoutify functionality,ScoutIQ subscription
+215472962261334,2026-02-04 13:12:25,true,,Accessing and managing Seller 365 apps,Seller 365
+215472962185812,2026-02-04 13:08:50,true,,Active listing and offer visibility issues,SKU and ASIN issues
+215472961722092,2026-02-04 12:22:31,true,,Hazmat shipping requirements and carrier options,Hazmat shipping requirements and carrier options
+215472961647476,2026-02-04 12:14:09,true,,Error message troubleshooting,Troubleshooting
+215472960843825,2026-02-04 11:21:18,true,,Tactical Arbitrage subscriptions and accounts,Tactical Arbitrage subscriptions and accounts
+215472960437671,2026-02-04 10:59:00,true,cancel,"InventoryLab subscription cancellation, InventoryLab subscription transition to Seller 365, Getting started and registering with Seller 365","Subscription cancellation and refunds, Seller 365"
+215472958647579,2026-02-04 09:04:17,true,,,
+215472956994971,2026-02-04 07:00:33,true,,FeedbackWhiz account setup and subscription,FeedbackWhiz account setup and subscription
+215472953864175,2026-02-03 23:22:08,true,,Transportation option confirmation issues,Placement errors
+215472953363072,2026-02-03 21:58:35,true,seller 365,"Accessing and managing Seller 365 apps, Seller 365 bundle features and inclusions",Seller 365
+215472953028892,2026-02-03 21:14:52,true,,Account reactivation and deactivation procedures,Account status
+215472952704154,2026-02-03 20:26:20,true,,"Automated review and feedback requests, Trial subscription cancellation","Review automation, Subscription cancellation and refunds"
+215472951352742,2026-02-03 17:35:08,true,,Account credits and service credit handling,Payment updates
+215472951106679,2026-02-03 16:57:29,true,,Shipment batch issues and closing procedures,Batch processing
+215472951084362,2026-02-03 16:54:24,true,,Box handling and item movement in batches,Batch processing
+215472950493575,2026-02-03 16:16:14,true,,Subscription renewal periods and expiration details,Subscription status options
+215472948689553,2026-02-03 14:45:31,true,,Automated review and feedback requests,Review automation
+215472946321285,2026-02-03 12:33:18,true,,"Minimum and maximum price configuration, SmartRepricer and InventoryLab integration and access",SmartRepricer
+215472946305141,2026-02-03 12:31:33,true,,"General shipment issues and status, Box handling and item movement in batches","Shipment issues, Batch processing"
+215472945802174,2026-02-03 12:12:13,true,,Invoice payments and viewing,Invoice payments and viewing
+215472945604915,2026-02-03 12:02:30,true,,Item revalidation troubleshooting,Troubleshooting
+215472944060904,2026-02-03 10:06:57,true,refund,"InventoryLab and supplier-related subscription refunds, Refund request status and processing","Subscription cancellation and refunds, Billing disputes and refunds"
+215472943538431,2026-02-03 09:34:57,true,,,
+215472941233247,2026-02-03 07:53:46,true,,"SmartRepricer settings and error resolution, Minimum and maximum price configuration",SmartRepricer
+215472937376204,2026-02-02 22:19:43,true,,"Amazon batch verification and submission errors, FBA and FBM inventory coordination, Batch submission issues","Amazon operations, FBA operations, Batch processing"
+215472936796623,2026-02-02 21:05:11,true,,"Amazon account integration and linking requirements, Scoutify login and access issues, ScoutIQ subscription cancellation and payment problems","Amazon operations, ScoutIQ subscription"
+215472936623547,2026-02-02 20:36:50,true,cancel,Trial subscription cancellation,Subscription cancellation and refunds
+215472936445163,2026-02-02 20:07:10,true,,"Inventory data upload, import, and shipment creation workflows",InventoryLab
+215472935790636,2026-02-02 19:28:39,true,,,
+215472934023072,2026-02-02 17:53:42,true,,Restock and insights reporting features,InventoryLab
+215472933557621,2026-02-02 17:23:14,true,"refund, cancel","Account cancellation confirmation, Refunds after subscription cancellation or failed cancellation, General subscription cancellation and refunds","Cancellation confirmation, Subscription cancellation and refunds"
+215472933367544,2026-02-02 17:00:06,true,seller 365,"Seller 365 subscription and plan downgrades, Seller 365 plan selection issues, ScoutIQ subscription cancellation and payment problems","Seller 365, ScoutIQ subscription"
+215472933314133,2026-02-02 16:54:53,true,,Changing associated account email addresses,Email settings
+215472933112910,2026-02-02 16:30:56,true,,MSKU validation and error resolution,SKU and ASIN issues
+215472932705069,2026-02-02 15:52:34,true,,"Inventory data upload, import, and shipment creation workflows, Active listing and offer visibility issues","InventoryLab, SKU and ASIN issues"
+215472932615916,2026-02-02 15:44:17,true,,Bulk cost and supplier data import,Bulk upload
+215472932327811,2026-02-02 15:22:29,true,,Subscription cancellation requests and account deletion,Subscription cancellation and refunds
+215472931764184,2026-02-02 14:49:52,true,,Automated review and feedback requests,Review automation
+215472931383853,2026-02-02 14:15:47,true,,Switching between monthly and yearly subscriptions,Subscription status options
+215472928668357,2026-02-02 11:04:24,true,,Accessing and managing Seller 365 apps,Seller 365
+215472926955706,2026-02-02 09:44:28,true,,"Credit card and card payment updates, Payment issues and troubleshooting",Payment updates
+215472920071661,2026-02-01 20:50:26,true,,Tactical Arbitrage subscriptions and accounts,Tactical Arbitrage subscriptions and accounts
+215472918821040,2026-02-01 17:16:20,true,,Account email changes and linking,InventoryLab
+215472918649480,2026-02-01 16:43:30,true,,"Address verification issues and error resolution, Amazon batch verification and submission errors","Address verification issues and error resolution, Amazon operations"
+215472918454119,2026-02-01 16:05:29,true,,Wholesale search and access options,Wholesale search and access options
+215472918333414,2026-02-01 15:50:35,true,cancel,Subscription cancellation options and button issues,Subscription cancellation and refunds
+215472917132493,2026-02-01 13:33:09,true,,"Subscription status and payment access, Shipment batch issues and closing procedures","InventoryLab, Batch processing"
+215472917051475,2026-02-01 13:24:19,true,,Bulk cost and supplier data import,Bulk upload
+215472913118542,2026-02-01 04:13:23,true,,Order visibility and health issues,Troubleshooting
+215472912662571,2026-02-01 02:31:57,true,,"Inventory data upload, import, and shipment creation workflows",InventoryLab

@@ -161,3 +161,74 @@ export const processData = (rawData, filters = {}) => {
     charts: { trendData, channelData, typeData, csatData, topTopicsData }
   };
 };
+
+export const parseFinData = (deflectionString, resolutionString) => {
+  return new Promise((resolve, reject) => {
+    Papa.parse(deflectionString, {
+      download: typeof deflectionString === 'string' && (deflectionString.endsWith('.csv') || deflectionString.startsWith('/')),
+      header: true,
+      skipEmptyLines: true,
+      complete: (defRes) => {
+        Papa.parse(resolutionString, {
+          download: typeof resolutionString === 'string' && (resolutionString.endsWith('.csv') || resolutionString.startsWith('/')),
+          header: true,
+          skipEmptyLines: true,
+          complete: (resRes) => {
+            resolve({ deflectionData: defRes.data, resolutionData: resRes.data });
+          },
+          error: (err) => reject(err)
+        });
+      },
+      error: (err) => reject(err)
+    });
+  });
+};
+
+export const processFinStats = (deflectionData, resolutionData, filters = {}) => {
+  const filterByDate = (row) => {
+    const sDateRaw = row['Conversation started at (America/New_York)'];
+    if (!sDateRaw) return false;
+    const sDateIso = sDateRaw.split(' ')[0];
+    if (filters.startDate && sDateIso < filters.startDate) return false;
+    if (filters.endDate && sDateIso > filters.endDate) return false;
+    return true;
+  };
+  
+  const filteredDeflection = deflectionData.filter(filterByDate);
+  const filteredResolution = resolutionData.filter(filterByDate);
+
+  let deflectionCount = 0;
+  let topTopicsCount = {};
+  
+  filteredDeflection.forEach(row => {
+    if (row['Fin AI Agent deflected'] === 'true') {
+      deflectionCount++;
+    }
+    const topic = row['AI Topic'];
+    if (topic && topic.trim() !== '') {
+      topTopicsCount[topic] = (topTopicsCount[topic] || 0) + 1;
+    }
+  });
+
+  const topFinTopicsData = Object.keys(topTopicsCount)
+    .map(name => ({ name, value: topTopicsCount[name] }))
+    .sort((a, b) => b.value - a.value)
+    .slice(0, 5);
+    
+  let resolutionCount = 0;
+  filteredResolution.forEach(row => {
+    const state = row['Fin AI Agent resolution state'];
+    if (state === 'Assumed resolved' || state === 'Confirmed resolved') {
+      resolutionCount++;
+    }
+  });
+
+  const agentResolutionRate = deflectionCount > 0 
+    ? ((resolutionCount / deflectionCount) * 100).toFixed(1)
+    : '0';
+    
+  return {
+    metrics: { deflectionCount, agentResolutionRate },
+    charts: { topFinTopicsData }
+  };
+};

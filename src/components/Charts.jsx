@@ -9,8 +9,9 @@ import {
 const COLORS = ['#8b5cf6', '#3b82f6', '#10b981', '#f59e0b', '#ef4444'];
 const PIE_COLORS = ['#ef4444', '#f97316', '#f59e0b', '#3b82f6', '#8b5cf6'];
 const TOPIC_COLORS = ['#10b981', '#059669', '#047857', '#065f46', '#064e3b'];
+const FIN_TOPIC_COLORS = ['#ec4899', '#db2777', '#be185d', '#9d174d', '#831843'];
 
-export const Charts = ({ charts }) => {
+export const Charts = ({ charts, finCharts }) => {
   return (
     <div className="charts-container">
       
@@ -61,6 +62,31 @@ export const Charts = ({ charts }) => {
           </ResponsiveContainer>
         </div>
       </div>
+
+      {/* 2b. Top 5 Fin AI Topics */}
+      {finCharts && finCharts.topFinTopicsData.length > 0 && (
+        <div className="chart-card glass-panel wide">
+          <h3 className="chart-title">Top 5 Fin AI Topics</h3>
+          <div className="chart-wrapper">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={finCharts.topFinTopicsData} layout="vertical" margin={{ top: 5, right: 30, left: 10, bottom: 5 }}>
+                <XAxis type="number" stroke="#94a3b8" tick={{ fill: '#94a3b8'}} />
+                <YAxis dataKey="name" type="category" stroke="#94a3b8" tick={{ fill: '#f8fafc', fontSize: 11 }} width={250} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#334155" horizontal={false} />
+                <Tooltip 
+                  cursor={{fill: 'rgba(255,255,255,0.05)'}}
+                  contentStyle={{ backgroundColor: 'rgba(15, 23, 42, 0.9)', borderColor: '#334155', borderRadius: '8px', color: '#f8fafc' }}
+                />
+                <Bar dataKey="value" fill="#ec4899" radius={[0, 4, 4, 0]}>
+                  {finCharts.topFinTopicsData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={FIN_TOPIC_COLORS[index % FIN_TOPIC_COLORS.length]} />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      )}
 
       {/* 3. CSAT Breakdown */}
       <div className="chart-card glass-panel">
