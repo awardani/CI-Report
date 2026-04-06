@@ -23,15 +23,15 @@ export const Charts = ({ charts, finCharts }) => {
             <AreaChart data={charts.trendData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
               <defs>
                 <linearGradient id="colorConvo" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.8}/>
+                  <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.4}/>
                   <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0}/>
                 </linearGradient>
               </defs>
-              <XAxis dataKey="date" stroke="#94a3b8" tick={{ fill: '#94a3b8'}} tickMargin={10} minTickGap={30}/>
-              <YAxis stroke="#94a3b8" tick={{ fill: '#94a3b8'}}/>
-              <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
+              <XAxis dataKey="date" stroke="#cbd5e1" tick={{ fill: '#64748b'}} tickMargin={10} minTickGap={30}/>
+              <YAxis stroke="#cbd5e1" tick={{ fill: '#64748b'}}/>
+              <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
               <Tooltip 
-                contentStyle={{ backgroundColor: 'rgba(15, 23, 42, 0.9)', borderColor: '#334155', borderRadius: '8px', color: '#f8fafc' }}
+                contentStyle={{ backgroundColor: '#ffffff', borderColor: '#e2e8f0', borderRadius: '8px', color: '#1e293b' }}
                 itemStyle={{ color: '#8b5cf6' }}
               />
               <Area type="monotone" dataKey="Conversations" stroke="#8b5cf6" strokeWidth={3} fillOpacity={1} fill="url(#colorConvo)" />
@@ -46,12 +46,12 @@ export const Charts = ({ charts, finCharts }) => {
         <div className="chart-wrapper">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={charts.topTopicsData} layout="vertical" margin={{ top: 5, right: 30, left: 10, bottom: 5 }}>
-              <XAxis type="number" stroke="#94a3b8" tick={{ fill: '#94a3b8'}} />
-              <YAxis dataKey="name" type="category" stroke="#94a3b8" tick={{ fill: '#f8fafc', fontSize: 11 }} width={250} />
-              <CartesianGrid strokeDasharray="3 3" stroke="#334155" horizontal={false} />
+              <XAxis type="number" stroke="#cbd5e1" tick={{ fill: '#64748b'}} />
+              <YAxis dataKey="name" type="category" stroke="#cbd5e1" tick={{ fill: '#64748b', fontSize: 11 }} width={250} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" horizontal={false} />
               <Tooltip 
-                cursor={{fill: 'rgba(255,255,255,0.05)'}}
-                contentStyle={{ backgroundColor: 'rgba(15, 23, 42, 0.9)', borderColor: '#334155', borderRadius: '8px', color: '#f8fafc' }}
+                cursor={{fill: 'rgba(0,0,0,0.03)'}}
+                contentStyle={{ backgroundColor: '#ffffff', borderColor: '#e2e8f0', borderRadius: '8px', color: '#1e293b' }}
               />
               <Bar dataKey="value" fill="#10b981" radius={[0, 4, 4, 0]}>
                 {charts.topTopicsData.map((entry, index) => (
@@ -70,12 +70,12 @@ export const Charts = ({ charts, finCharts }) => {
           <div className="chart-wrapper">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={finCharts.topFinTopicsData} layout="vertical" margin={{ top: 5, right: 30, left: 10, bottom: 5 }}>
-                <XAxis type="number" stroke="#94a3b8" tick={{ fill: '#94a3b8'}} />
-                <YAxis dataKey="name" type="category" stroke="#94a3b8" tick={{ fill: '#f8fafc', fontSize: 11 }} width={250} />
-                <CartesianGrid strokeDasharray="3 3" stroke="#334155" horizontal={false} />
+                <XAxis type="number" stroke="#cbd5e1" tick={{ fill: '#64748b'}} />
+                <YAxis dataKey="name" type="category" stroke="#cbd5e1" tick={{ fill: '#64748b', fontSize: 11 }} width={250} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" horizontal={false} />
                 <Tooltip 
-                  cursor={{fill: 'rgba(255,255,255,0.05)'}}
-                  contentStyle={{ backgroundColor: 'rgba(15, 23, 42, 0.9)', borderColor: '#334155', borderRadius: '8px', color: '#f8fafc' }}
+                  cursor={{fill: 'rgba(0,0,0,0.03)'}}
+                  contentStyle={{ backgroundColor: '#ffffff', borderColor: '#e2e8f0', borderRadius: '8px', color: '#1e293b' }}
                 />
                 <Bar dataKey="value" fill="#ec4899" radius={[0, 4, 4, 0]}>
                   {finCharts.topFinTopicsData.map((entry, index) => (
@@ -109,7 +109,7 @@ export const Charts = ({ charts, finCharts }) => {
                 ))}
               </Pie>
               <Tooltip 
-                 contentStyle={{ backgroundColor: 'rgba(15, 23, 42, 0.9)', borderColor: '#334155', borderRadius: '8px', color: '#f8fafc' }}
+                 contentStyle={{ backgroundColor: '#ffffff', borderColor: '#e2e8f0', borderRadius: '8px', color: '#1e293b' }}
               />
             </PieChart>
           </ResponsiveContainer>
@@ -130,12 +130,12 @@ export const Charts = ({ charts, finCharts }) => {
         <div className="chart-wrapper">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={charts.channelData.slice(0, 5)} layout="vertical" margin={{ top: 5, right: 30, left: 40, bottom: 5 }}>
-              <XAxis type="number" stroke="#94a3b8" tick={{ fill: '#94a3b8'}} />
-              <YAxis dataKey="name" type="category" stroke="#94a3b8" tick={{ fill: '#f8fafc'}} width={80} />
-              <CartesianGrid strokeDasharray="3 3" stroke="#334155" horizontal={false} />
+              <XAxis type="number" stroke="#cbd5e1" tick={{ fill: '#64748b'}} />
+              <YAxis dataKey="name" type="category" stroke="#cbd5e1" tick={{ fill: '#64748b'}} width={80} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" horizontal={false} />
               <Tooltip 
-                cursor={{fill: 'rgba(255,255,255,0.05)'}}
-                contentStyle={{ backgroundColor: 'rgba(15, 23, 42, 0.9)', borderColor: '#334155', borderRadius: '8px', color: '#f8fafc' }}
+                cursor={{fill: 'rgba(0,0,0,0.03)'}}
+                contentStyle={{ backgroundColor: '#ffffff', borderColor: '#e2e8f0', borderRadius: '8px', color: '#1e293b' }}
               />
               <Bar dataKey="value" fill="#3b82f6" radius={[0, 4, 4, 0]}>
                 {charts.channelData.map((entry, index) => (

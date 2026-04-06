@@ -77,15 +77,14 @@ function App() {
   }
 
   return (
-    <div className="dashboard-container">
-      <header className="dashboard-header">
-        <div>
-          <h1>Support Intel Dashboard</h1>
-          <p>Real-time insights from your Intercom conversations</p>
+    <div className="dashboard-wrapper">
+      <header className="top-banner">
+        <div className="max-w-container">
+          <h1>Dashboard</h1>
         </div>
       </header>
       
-      <main>
+      <main className="max-w-container main-content">
         <Filters 
           availableTeams={appData.availableTeams}
           availableTeammates={appData.availableTeammates}
