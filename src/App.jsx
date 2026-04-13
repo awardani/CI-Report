@@ -1,65 +1,167 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { KeyMetrics } from './components/KeyMetrics';
-import { Charts } from './components/Charts';
-import { Filters } from './components/Filters';
-import { CsatReport } from './components/CsatReport';
-import { parseCSV, processData, parseCSAT, parseFinData, processFinStats } from './utils/csvParser';
+import React, {
+  startTransition,
+  useCallback,
+  useDeferredValue,
+  useEffect,
+  useState,
+} from 'react';
+import { DashboardOverview } from './components/DashboardOverview.jsx';
+import { IntercomWorkspace } from './components/IntercomWorkspace.jsx';
+import { SharedControls } from './components/SharedControls.jsx';
+import { SidebarNavigation } from './components/SidebarNavigation.jsx';
+import { ThreecoltsUniversityWorkspace } from './components/ThreecoltsUniversityWorkspace.jsx';
+import {
+  loadConfiguredIntercomSource,
+  loadConfiguredLearnWorldsSource,
+} from './dataSources/index.js';
+import { normalizeLearnWorldsDatasets } from './learnworlds/normalization.js';
+import { validateLearnWorldsData } from './learnworlds/validation.js';
+import { normalizeIntercomDatasets } from './metrics/normalization';
+import { validateIntercomData } from './metrics/validation.js';
+
+const DEFAULT_REPORTING_WINDOW_DAYS = 90;
+const SECTION_TITLES = {
+  dashboard: 'Dashboard',
+  intercom: 'Intercom',
+  university: 'Threecolts University',
+};
+
+const parseDateInput = (value) => {
+  if (!value) {
+    return null;
+  }
+
+  const parsed = new Date(`${value}T00:00:00Z`);
+  return Number.isNaN(parsed.getTime()) ? null : parsed;
+};
+
+const formatDateInput = (date) => {
+  if (!(date instanceof Date) || Number.isNaN(date.getTime())) {
+    return '';
+  }
+
+  return date.toISOString().slice(0, 10);
+};
+
+const getDefaultReportingRange = ({ minDate, maxDate, windowDays = DEFAULT_REPORTING_WINDOW_DAYS }) => {
+  const min = parseDateInput(minDate);
+  const max = parseDateInput(maxDate);
+
+  if (!min || !max) {
+    return {
+      startDate: minDate || '',
+      endDate: maxDate || '',
+    };
+  }
+
+  const proposedStart = new Date(max);
+  proposedStart.setUTCDate(proposedStart.getUTCDate() - (windowDays - 1));
+
+  const clampedStart = proposedStart < min ? min : proposedStart;
+
+  return {
+    startDate: formatDateInput(clampedStart),
+    endDate: formatDateInput(max),
+  };
+};
 
 function App() {
-  const [appData, setAppData] = useState(null);
-  const [csatData, setCsatData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [finData, setFinData] = useState(null);
-  const [filters, setFilters] = useState({
+  const [activeSection, setActiveSection] = useState('dashboard');
+  const [intercomNormalizedData, setIntercomNormalizedData] = useState(null);
+  const [learningNormalizedData, setLearningNormalizedData] = useState(null);
+  const [intercomLoading, setIntercomLoading] = useState(true);
+  const [learningLoading, setLearningLoading] = useState(false);
+  const [intercomError, setIntercomError] = useState(null);
+  const [learningError, setLearningError] = useState(null);
+  const [comparisonGranularity] = useState('monthly');
+  const [sharedDateRange, setSharedDateRange] = useState({
     startDate: '',
     endDate: '',
-    team: '',
-    teammate: ''
+  });
+  const [intercomFilters, setIntercomFilters] = useState({
+    teamGroup: '',
+    team: [],
+    teammate: [],
   });
 
+  const deferredSharedDateRange = useDeferredValue(sharedDateRange);
+  const deferredComparisonGranularity = useDeferredValue(comparisonGranularity);
+  const deferredIntercomFilters = useDeferredValue(intercomFilters);
+  const pageTitle = SECTION_TITLES[activeSection] ?? 'Dashboard';
+
   useEffect(() => {
-    const loadData = async () => {
+    const loadIntercomData = async () => {
       try {
-        const [result, csatResult, finResult] = await Promise.all([
-          parseCSV('/data.csv'),
-          parseCSAT('/csat.csv'),
-          parseFinData('/fin_deflection.csv', '/fin_resolution.csv')
-        ]);
-        
-        setAppData(result);
-        setCsatData(csatResult);
-        setFinData(finResult);
-        
-        // Initialize default dates
-        setFilters(prev => ({
-          ...prev,
-          startDate: result.dateBounds.minDate,
-          endDate: result.dateBounds.maxDate
-        }));
-        
-        setLoading(false);
-      } catch (err) {
-        console.error("Failed to parse CSV", err);
-        setError("Failed to load customer support data. Please ensure data.csv exists.");
-        setLoading(false);
+        const source = await loadConfiguredIntercomSource();
+        const normalized = normalizeIntercomDatasets(source.datasets);
+        validateIntercomData(source.datasets, normalized);
+
+        startTransition(() => {
+          setIntercomNormalizedData(normalized);
+          setSharedDateRange(getDefaultReportingRange(normalized.dateBounds.started_at));
+          setIntercomLoading(false);
+        });
+      } catch (error) {
+        console.error('Failed to load Intercom dashboard data', error);
+        setIntercomError(
+          'Failed to load dashboard data. Please check the configured Intercom source and environment.'
+        );
+        setIntercomLoading(false);
       }
     };
-    
-    loadData();
+
+    loadIntercomData();
   }, []);
 
-  const data = useMemo(() => {
-    if (!appData) return null;
-    return processData(appData.rawData, filters);
-  }, [appData, filters]);
+  useEffect(() => {
+    if (learningNormalizedData || learningLoading || !['dashboard', 'university'].includes(activeSection)) {
+      return;
+    }
 
-  const finProcessedData = useMemo(() => {
-    if (!finData) return null;
-    return processFinStats(finData.deflectionData, finData.resolutionData, filters);
-  }, [finData, filters]);
+    const loadLearningData = async () => {
+      try {
+        setLearningLoading(true);
+        const source = await loadConfiguredLearnWorldsSource();
+        const normalized = normalizeLearnWorldsDatasets(source.datasets);
+        validateLearnWorldsData(source.datasets, normalized);
 
-  if (loading) {
+        startTransition(() => {
+          setLearningNormalizedData(normalized);
+          setLearningError(null);
+          setLearningLoading(false);
+        });
+      } catch (error) {
+        startTransition(() => {
+          setLearningError(
+            error?.message || 'Threecolts University data is not available right now.'
+          );
+          setLearningLoading(false);
+        });
+      }
+    };
+
+    loadLearningData();
+  }, [activeSection, learningLoading, learningNormalizedData]);
+
+  const handleSidebarChange = useCallback((nextSection) => {
+    startTransition(() => {
+      setActiveSection(nextSection);
+    });
+  }, []);
+
+  const handleSharedDateRangeChange = useCallback((updater) => {
+    startTransition(() => {
+      setSharedDateRange(updater);
+    });
+  }, []);
+
+  const handleIntercomFilterChange = useCallback((updater) => {
+    startTransition(() => {
+      setIntercomFilters(updater);
+    });
+  }, []);
+
+  if (intercomLoading) {
     return (
       <div className="loading-screen">
         <div className="spinner"></div>
@@ -68,32 +170,68 @@ function App() {
     );
   }
 
-  if (error) {
+  if (intercomError) {
     return (
       <div className="loading-screen">
-        <p style={{ color: '#ef4444' }}>{error}</p>
+        <p style={{ color: '#ef4444' }}>{intercomError}</p>
       </div>
     );
   }
 
   return (
-    <div className="dashboard-wrapper">
-      <header className="top-banner">
-        <div className="max-w-container">
-          <h1>Dashboard</h1>
-        </div>
-      </header>
-      
-      <main className="max-w-container main-content">
-        <Filters 
-          availableTeams={appData.availableTeams}
-          availableTeammates={appData.availableTeammates}
-          filters={filters}
-          onFilterChange={setFilters}
+    <div className="dashboard-wrapper app-frame">
+      <main className="app-shell integrated-shell">
+        <SidebarNavigation
+          activeSection={activeSection}
+          onChange={handleSidebarChange}
         />
-        <KeyMetrics metrics={data.metrics} finMetrics={finProcessedData?.metrics} />
-        <Charts charts={data.charts} finCharts={finProcessedData?.charts} />
-        {csatData && <CsatReport csatData={csatData} />}
+
+        <section className="content-shell">
+          <div className="workspace-body">
+            <header className="workspace-topbar">
+              <div className="workspace-topbar-title">
+                <h1>{pageTitle}</h1>
+              </div>
+              <SharedControls
+                dateRange={sharedDateRange}
+                onDateRangeChange={handleSharedDateRangeChange}
+              />
+            </header>
+
+            {activeSection === 'dashboard' && (
+              <DashboardOverview
+                intercomNormalizedData={intercomNormalizedData}
+                learningNormalizedData={learningNormalizedData}
+                learningLoading={learningLoading}
+                learningError={learningError}
+                sharedDateRange={deferredSharedDateRange}
+                comparisonGranularity={deferredComparisonGranularity}
+              />
+            )}
+
+            {activeSection === 'intercom' && (
+            <IntercomWorkspace
+              normalizedData={intercomNormalizedData}
+              availableTeams={intercomNormalizedData.availableTeams}
+              availableTeammates={intercomNormalizedData.availableTeammates}
+              sharedFilters={deferredSharedDateRange}
+              localFilters={deferredIntercomFilters}
+              onLocalFilterChange={handleIntercomFilterChange}
+              comparisonGranularity={deferredComparisonGranularity}
+            />
+            )}
+
+            {activeSection === 'university' && (
+              <ThreecoltsUniversityWorkspace
+                normalizedData={learningNormalizedData}
+                loading={learningLoading}
+                error={learningError}
+                sharedDateRange={deferredSharedDateRange}
+                comparisonGranularity={deferredComparisonGranularity}
+              />
+            )}
+          </div>
+        </section>
       </main>
     </div>
   );

@@ -1,20 +1,20 @@
-import React, { useState } from 'react';
-import { MessageSquare, Star, User } from 'lucide-react';
+import React, { memo, useState } from 'react';
+import { Star, User } from 'lucide-react';
 
-export const CsatReport = ({ csatData }) => {
+export const CsatReport = memo(({ reviews, title = 'CSAT Report Feed' }) => {
   const [scoreFilter, setScoreFilter] = useState('');
 
-  const filteredData = csatData.filter(item => {
-    const ratingStr = item['Conversation rating'];
-    if (!ratingStr) return false;
-    if (scoreFilter && ratingStr !== scoreFilter) return false;
+  const filteredData = reviews.filter((item) => {
+    const ratingValue = item.rating_value;
+    if (ratingValue == null) return false;
+    if (scoreFilter && String(ratingValue) !== scoreFilter) return false;
     return true;
   });
 
   return (
     <div className="csat-report glass-panel">
       <div className="csat-header">
-        <h3 className="chart-title" style={{ marginBottom: 0 }}>CSAT Report Feed</h3>
+        <h3 className="chart-title" style={{ marginBottom: 0 }}>{title}</h3>
         <select 
           className="filter-input glass-input"
           value={scoreFilter} 
@@ -31,13 +31,15 @@ export const CsatReport = ({ csatData }) => {
 
       <div className="csat-feed">
         {filteredData.map((review, index) => {
-          const score = parseInt(review['Conversation rating'] || '0');
+          const score = review.rating_value || 0;
           const isPositive = score >= 4;
           const isNeutral = score === 3;
-          let badgeColor = isPositive ? '#10b981' : isNeutral ? '#f59e0b' : '#ef4444';
+          const badgeColor = isPositive ? '#10b981' : isNeutral ? '#f59e0b' : '#ef4444';
+          const ratedTarget = review.rated_teammate_name || review.rated_agent_type || 'Unknown';
+          const ratedLabel = review.rated_teammate_name ? 'Rated teammate' : 'Rated';
 
           return (
-            <div key={index} className="review-card">
+            <div key={`${review.conversation_id}-${review.rated_at}-${index}`} className="review-card">
               <div className="review-meta">
                 <div className="review-stars" style={{ color: badgeColor }}>
                   {Array.from({ length: score }).map((_, i) => (
@@ -45,11 +47,11 @@ export const CsatReport = ({ csatData }) => {
                   ))}
                   <span className="review-score-text">({score}/5)</span>
                 </div>
-                <span className="review-date">{review['Updated at (America/New_York)']}</span>
+                <span className="review-date">{review.rated_at || 'Unknown date'}</span>
               </div>
               
-              {review['Conversation rating remark'] ? (
-                 <p className="review-remark">"{review['Conversation rating remark']}"</p>
+              {review.rating_remark ? (
+                 <p className="review-remark">"{review.rating_remark}"</p>
               ) : (
                  <p className="review-remark empty-remark">No written feedback provided.</p>
               )}
@@ -57,10 +59,10 @@ export const CsatReport = ({ csatData }) => {
               <div className="review-footer">
                 <div className="review-user">
                   <User size={14} />
-                  <span>{review['User name'] || 'Anonymous'}</span>
+                  <span>{review.user_name || 'Anonymous'}</span>
                 </div>
                 <div className="review-agent">
-                  <span>Assigned to: {review['Teammate rated'] || 'Unknown'}</span>
+                  <span>{ratedLabel}: {ratedTarget}</span>
                 </div>
               </div>
             </div>
@@ -72,4 +74,4 @@ export const CsatReport = ({ csatData }) => {
       </div>
     </div>
   );
-};
+});
