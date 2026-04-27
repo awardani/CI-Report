@@ -27,7 +27,7 @@ export default defineConfig([
     },
   },
   {
-    files: ['server/**/*.js', 'netlify/functions/**/*.js', 'vite.config.js'],
+    files: ['api/**/*.js', 'server/**/*.js', 'netlify/functions/**/*.js', 'vite.config.js'],
     extends: [js.configs.recommended],
     languageOptions: {
       ecmaVersion: 2020,
