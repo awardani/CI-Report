@@ -5,6 +5,7 @@ import React, {
   useEffect,
   useState,
 } from 'react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import { DashboardOverview } from './components/DashboardOverview.jsx';
 import { IntercomWorkspace } from './components/IntercomWorkspace.jsx';
 import { SharedControls } from './components/SharedControls.jsx';
@@ -180,6 +181,7 @@ function App() {
 
   return (
     <div className="dashboard-wrapper app-frame">
+      <SpeedInsights />
       <main className="app-shell integrated-shell">
         <SidebarNavigation
           activeSection={activeSection}
