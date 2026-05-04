@@ -6,10 +6,9 @@ import React, {
   useState,
 } from 'react';
 import { DashboardOverview } from './components/DashboardOverview.jsx';
-import { IntercomWorkspace } from './components/IntercomWorkspace.jsx';
-import { SharedControls } from './components/SharedControls.jsx';
+import IntercomWorkspace from './components/IntercomWorkspace.jsx';
 import { SidebarNavigation } from './components/SidebarNavigation.jsx';
-import { ThreecoltsUniversityWorkspace } from './components/ThreecoltsUniversityWorkspace.jsx';
+import { AIRecommendationsPage } from './pages/AIRecommendationsPage.jsx';
 import {
   loadConfiguredIntercomSource,
   loadConfiguredLearnWorldsSource,
@@ -23,8 +22,22 @@ const DEFAULT_REPORTING_WINDOW_DAYS = 90;
 const SECTION_TITLES = {
   dashboard: 'Dashboard',
   intercom: 'Intercom',
-  university: 'Threecolts University',
+  'ai-recommendations': 'AI Recommendations',
 };
+
+const PATH_TO_SECTION = {
+  '/': 'dashboard',
+  '/intercom': 'intercom',
+  '/ai-recommendations': 'ai-recommendations',
+};
+
+const SECTION_TO_PATH = {
+  dashboard: '/',
+  intercom: '/intercom',
+  'ai-recommendations': '/ai-recommendations',
+};
+
+const resolveSectionFromPath = (pathname) => PATH_TO_SECTION[pathname] || 'dashboard';
 
 const parseDateInput = (value) => {
   if (!value) {
@@ -65,10 +78,24 @@ const getDefaultReportingRange = ({ minDate, maxDate, windowDays = DEFAULT_REPOR
   };
 };
 
+const scheduleBackgroundLoad = (callback) => {
+  if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+    const id = window.requestIdleCallback(callback, { timeout: 1500 });
+    return () => window.cancelIdleCallback(id);
+  }
+
+  const timeoutId = window.setTimeout(callback, 250);
+  return () => window.clearTimeout(timeoutId);
+};
+
 function App() {
-  const [activeSection, setActiveSection] = useState('dashboard');
+  const [activeSection, setActiveSection] = useState(() =>
+    typeof window === 'undefined' ? 'dashboard' : resolveSectionFromPath(window.location.pathname)
+  );
   const [intercomNormalizedData, setIntercomNormalizedData] = useState(null);
   const [learningNormalizedData, setLearningNormalizedData] = useState(null);
+  const [intercomSourceMeta, setIntercomSourceMeta] = useState(null);
+  const [learningSourceMeta, setLearningSourceMeta] = useState(null);
   const [intercomLoading, setIntercomLoading] = useState(true);
   const [learningLoading, setLearningLoading] = useState(false);
   const [intercomError, setIntercomError] = useState(null);
@@ -93,20 +120,30 @@ function App() {
     const loadIntercomData = async () => {
       try {
         const source = await loadConfiguredIntercomSource();
+
+        if (!source) {
+          throw new Error('Intercom datasets not found.');
+        }
+
         const normalized = normalizeIntercomDatasets(source.datasets);
         validateIntercomData(source.datasets, normalized);
 
         startTransition(() => {
           setIntercomNormalizedData(normalized);
+          setIntercomSourceMeta(source.meta ?? null);
           setSharedDateRange(getDefaultReportingRange(normalized.dateBounds.started_at));
+          setIntercomError(null);
           setIntercomLoading(false);
         });
       } catch (error) {
         console.error('Failed to load Intercom dashboard data', error);
-        setIntercomError(
-          'Failed to load dashboard data. Please check the configured Intercom source and environment.'
-        );
-        setIntercomLoading(false);
+        startTransition(() => {
+          setIntercomError(
+            error?.message ||
+              'Intercom data is not available right now. The rest of the dashboard can still load.'
+          );
+          setIntercomLoading(false);
+        });
       }
     };
 
@@ -114,36 +151,93 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (learningNormalizedData || learningLoading || !['dashboard', 'university'].includes(activeSection)) {
-      return;
-    }
+    const handlePopState = () => {
+      startTransition(() => {
+        setActiveSection(resolveSectionFromPath(window.location.pathname));
+      });
+    };
 
-    const loadLearningData = async () => {
+    window.addEventListener('popstate', handlePopState);
+
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadLearningData = async ({ mode, preserveExistingDataOnError = true }) => {
       try {
-        setLearningLoading(true);
-        const source = await loadConfiguredLearnWorldsSource();
+        if (cancelled) {
+          return;
+        }
+
+        startTransition(() => {
+          setLearningLoading(true);
+        });
+        const source = await loadConfiguredLearnWorldsSource({ mode });
+
+        if (cancelled) {
+          return;
+        }
+
+        if (!source) {
+          startTransition(() => {
+            setLearningNormalizedData(null);
+            setLearningSourceMeta(null);
+            setLearningError(null);
+            setLearningLoading(false);
+          });
+          return;
+        }
+
+        if (!source.datasets) {
+          throw new Error('Threecolts University datasets not found.');
+        }
+
         const normalized = normalizeLearnWorldsDatasets(source.datasets);
         validateLearnWorldsData(source.datasets, normalized);
 
         startTransition(() => {
           setLearningNormalizedData(normalized);
+          setLearningSourceMeta(source.meta ?? null);
           setLearningError(null);
           setLearningLoading(false);
         });
       } catch (error) {
+        if (cancelled) {
+          return;
+        }
+
         startTransition(() => {
-          setLearningError(
-            error?.message || 'Threecolts University data is not available right now.'
-          );
+          if (!preserveExistingDataOnError || !learningNormalizedData) {
+            setLearningError(
+              error?.message || 'Threecolts University data is not available right now.'
+            );
+          }
           setLearningLoading(false);
         });
       }
     };
 
-    loadLearningData();
-  }, [activeSection, learningLoading, learningNormalizedData]);
+    const cancelScheduledLoad = scheduleBackgroundLoad(() => {
+      loadLearningData({ mode: 'snapshot' });
+    });
+
+    return () => {
+      cancelled = true;
+      cancelScheduledLoad();
+    };
+  }, []);
 
   const handleSidebarChange = useCallback((nextSection) => {
+    const nextPath = SECTION_TO_PATH[nextSection] || '/';
+
+    if (typeof window !== 'undefined' && window.location.pathname !== nextPath) {
+      window.history.pushState({}, '', nextPath);
+    }
+
     startTransition(() => {
       setActiveSection(nextSection);
     });
@@ -161,19 +255,11 @@ function App() {
     });
   }, []);
 
-  if (intercomLoading) {
+  if (intercomLoading && learningLoading) {
     return (
       <div className="loading-screen">
         <div className="spinner"></div>
         <p style={{ color: '#94a3b8' }}>Loading metrics...</p>
-      </div>
-    );
-  }
-
-  if (intercomError) {
-    return (
-      <div className="loading-screen">
-        <p style={{ color: '#ef4444' }}>{intercomError}</p>
       </div>
     );
   }
@@ -192,19 +278,20 @@ function App() {
               <div className="workspace-topbar-title">
                 <h1>{pageTitle}</h1>
               </div>
-              <SharedControls
-                dateRange={sharedDateRange}
-                onDateRangeChange={handleSharedDateRangeChange}
-              />
             </header>
 
             {activeSection === 'dashboard' && (
               <DashboardOverview
                 intercomNormalizedData={intercomNormalizedData}
+                intercomSourceMeta={intercomSourceMeta}
+                intercomLoading={intercomLoading}
+                intercomError={intercomError}
                 learningNormalizedData={learningNormalizedData}
+                learningSourceMeta={learningSourceMeta}
                 learningLoading={learningLoading}
                 learningError={learningError}
                 sharedDateRange={deferredSharedDateRange}
+                availableTeams={intercomNormalizedData?.availableTeams || []}
                 comparisonGranularity={deferredComparisonGranularity}
               />
             )}
@@ -212,20 +299,23 @@ function App() {
             {activeSection === 'intercom' && (
             <IntercomWorkspace
               normalizedData={intercomNormalizedData}
-              availableTeams={intercomNormalizedData.availableTeams}
-              availableTeammates={intercomNormalizedData.availableTeammates}
+              error={intercomError}
+              loading={intercomLoading}
+              availableTeams={intercomNormalizedData?.availableTeams || []}
               sharedFilters={deferredSharedDateRange}
               localFilters={deferredIntercomFilters}
               onLocalFilterChange={handleIntercomFilterChange}
+              onSharedDateRangeChange={handleSharedDateRangeChange}
               comparisonGranularity={deferredComparisonGranularity}
             />
             )}
 
-            {activeSection === 'university' && (
-              <ThreecoltsUniversityWorkspace
-                normalizedData={learningNormalizedData}
-                loading={learningLoading}
-                error={learningError}
+            {activeSection === 'ai-recommendations' && (
+              <AIRecommendationsPage
+                intercomNormalizedData={intercomNormalizedData}
+                intercomSourceMeta={intercomSourceMeta}
+                learningNormalizedData={learningNormalizedData}
+                learningSourceMeta={learningSourceMeta}
                 sharedDateRange={deferredSharedDateRange}
                 comparisonGranularity={deferredComparisonGranularity}
               />

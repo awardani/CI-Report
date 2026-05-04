@@ -10,12 +10,14 @@ const ENV_KEYS = [
   'LEARNWORLDS_INITIAL_PAGE_LIMIT',
   'LEARNWORLDS_REQUEST_DELAY_MS',
   'LEARNWORLDS_DATASET_CACHE_TTL_MS',
+  'LEARNWORLDS_REQUEST_TIMEOUT_MS',
 ];
 
 const VALID_DATA_SOURCES = new Set(['', 'api']);
 const DEFAULT_INITIAL_PAGE_LIMIT = 5;
 const DEFAULT_REQUEST_DELAY_MS = 250;
-const DEFAULT_DATASET_CACHE_TTL_MS = 5 * 60 * 1000;
+const DEFAULT_DATASET_CACHE_TTL_MS = 60 * 1000;
+const DEFAULT_REQUEST_TIMEOUT_MS = 15000;
 
 const parseIntegerEnv = (value, fallback) => {
   if (value === undefined || value === null || value === '') {
@@ -48,6 +50,10 @@ export const loadLearnWorldsServerEnv = ({ rootDir = process.cwd(), env = proces
       merged.LEARNWORLDS_DATASET_CACHE_TTL_MS,
       DEFAULT_DATASET_CACHE_TTL_MS
     ),
+    requestTimeoutMs: parseIntegerEnv(
+      merged.LEARNWORLDS_REQUEST_TIMEOUT_MS,
+      DEFAULT_REQUEST_TIMEOUT_MS
+    ),
   };
 };
 
@@ -71,13 +77,21 @@ export const validateLearnWorldsServerEnv = (config) => {
     invalid.push('LEARNWORLDS_DATASET_CACHE_TTL_MS');
   }
 
+  if (!Number.isInteger(config.requestTimeoutMs) || config.requestTimeoutMs < 1000) {
+    invalid.push('LEARNWORLDS_REQUEST_TIMEOUT_MS');
+  }
+
   if (config.dataSource === 'api') {
     if (!config.apiBaseUrl) {
       missing.push('LEARNWORLDS_API_BASE_URL');
     }
 
     if (!config.apiKey) {
-      missing.push('LEARNWORLDS_API_KEY');
+      missing.push('LEARNWORLDS_API_TOKEN or LEARNWORLDS_API_KEY');
+    }
+
+    if (!config.clientId) {
+      missing.push('LEARNWORLDS_CLIENT_ID');
     }
   }
 
@@ -103,6 +117,7 @@ export const maskLearnWorldsServerConfig = (config) => ({
   initialPageLimit: config.initialPageLimit,
   requestDelayMs: config.requestDelayMs,
   datasetCacheTtlMs: config.datasetCacheTtlMs,
+  requestTimeoutMs: config.requestTimeoutMs,
 });
 
 export const LEARNWORLDS_SERVER_ENV_KEYS = ENV_KEYS;

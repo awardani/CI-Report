@@ -106,6 +106,28 @@ test('API source uses bounded initial backfill and cache for repeat loads', asyn
       });
     }
 
+    if (pathname === '/articles') {
+      return new Response(
+        JSON.stringify({
+          data: [
+            {
+              id: 'article-1',
+              title: 'Cancellation and refund guide',
+              url: 'https://help.example.com/en/articles/1-cancellation-and-refund-guide',
+              updated_at: nowUnix,
+              section: { title: 'Billing' },
+              collection: { title: 'Account help' },
+            },
+          ],
+          pages: {},
+        }),
+        {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
     if (pathname === '/conversations') {
       const startingAfter = url.searchParams.get('starting_after');
       const pageOne = {
@@ -178,7 +200,10 @@ test('API source uses bounded initial backfill and cache for repeat loads', asyn
 
   assert.equal(first.datasets.conversationRows.length, 1);
   assert.equal(first.meta.apiSummary.initialBackfillDays, 120);
+  assert.equal(first.meta.apiSummary.helpCenterArticlesFetched, 1);
+  assert.equal(first.meta.contentCatalog.intercom_help_center.connected, true);
+  assert.equal(first.meta.contentCatalog.intercom_help_center.items[0].title, 'Cancellation and refund guide');
   assert.equal(first.meta.apiSummary.datasetCacheHit, false);
   assert.equal(second.meta.apiSummary.datasetCacheHit, true);
-  assert.equal(fetchCalls, 3);
+  assert.equal(fetchCalls, 4);
 });

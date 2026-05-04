@@ -309,3 +309,10 @@ export const calculateMetricSet = (normalizedData, filters, metricIds = null) =>
     return accumulator;
   }, {});
 };
+
+export default {
+  NEW_CONVERSATION_PROXY_STARTED_BY,
+  metricSpecs,
+  metricSpecsById,
+  calculateMetricSet,
+};

@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { GraduationCap, LayoutDashboard, MessageSquareMore } from 'lucide-react';
+import { LayoutDashboard, MessageSquareMore, Sparkles } from 'lucide-react';
 
 const NAV_ITEMS = [
   {
@@ -13,9 +13,9 @@ const NAV_ITEMS = [
     icon: MessageSquareMore,
   },
   {
-    id: 'university',
-    label: 'Threecolts University',
-    icon: GraduationCap,
+    id: 'ai-recommendations',
+    label: 'AI Recommendations',
+    icon: Sparkles,
   },
 ];
 

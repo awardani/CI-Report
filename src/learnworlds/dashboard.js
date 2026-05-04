@@ -142,6 +142,7 @@ export const buildLearnWorldsCombinedTrend = (
   granularity = 'daily'
 ) => buildMetricSeries(normalizedData, filters, granularity, [
   'lw_new_registrations',
+  'lw_enrollees',
   'lw_active_users',
 ]);
 

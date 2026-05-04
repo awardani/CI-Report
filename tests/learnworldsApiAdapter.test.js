@@ -12,6 +12,14 @@ const jsonResponse = (body, status = 200) =>
     },
   });
 
+const textResponse = (body, status = 200, contentType = 'text/html') =>
+  new Response(body, {
+    status,
+    headers: {
+      'Content-Type': contentType,
+    },
+  });
+
 test('LearnWorlds adapter contract requires all LearnWorlds dataset arrays', () => {
   const payload = createLearnWorldsSourcePayload({
     adapterId: 'learnworlds-api',
@@ -169,6 +177,49 @@ test('LearnWorlds API source maps users, enrollments, progress, and analytics in
       });
     }
 
+    if (url.pathname === '/blog') {
+      return textResponse(`
+        <html>
+          <head>
+            <script type="application/ld+json">
+              {
+                "@context": "https://schema.org",
+                "@type": "BlogPosting",
+                "headline": "Cancellation and refund walkthrough",
+                "url": "https://academy.example.com/blog/cancellation-and-refund-walkthrough",
+                "articleSection": "Billing",
+                "keywords": ["refund", "billing"],
+                "datePublished": "2026-01-04T00:00:00Z",
+                "dateModified": "2026-01-09T00:00:00Z"
+              }
+            </script>
+          </head>
+          <body></body>
+        </html>
+      `);
+    }
+
+    if (url.pathname === '/classes') {
+      return textResponse(`
+        <html>
+          <head>
+            <script type="application/ld+json">
+              {
+                "@context": "https://schema.org",
+                "@type": "Course",
+                "name": "Seller 365 Live Onboarding Class",
+                "url": "https://academy.example.com/classes/seller-365-live-onboarding",
+                "keywords": ["seller 365", "onboarding"],
+                "datePublished": "2026-01-06T00:00:00Z",
+                "dateModified": "2026-01-11T00:00:00Z"
+              }
+            </script>
+          </head>
+          <body></body>
+        </html>
+      `);
+    }
+
     throw new Error(`Unexpected LearnWorlds path ${url.pathname}${url.search}`);
   };
 
@@ -211,7 +262,11 @@ test('LearnWorlds API source maps users, enrollments, progress, and analytics in
   assert.equal(payload.meta.validationSummary.progressRows.missingLastActivityCount, 1);
   assert.equal(payload.meta.validationSummary.activityAnalyticsRows.missingActivityIdentityCount, 1);
   assert.equal(payload.meta.envMask.apiKeyPresent, true);
-  assert.equal(payload.meta.endpointSummary.requestCount, 5);
+  assert.equal(payload.meta.endpointSummary.requestCount, 7);
+  assert.equal(payload.meta.contentCatalog.learnworlds_blog.connected, true);
+  assert.equal(payload.meta.contentCatalog.learnworlds_blog.items[0].title, 'Cancellation and refund walkthrough');
+  assert.equal(payload.meta.contentCatalog.learnworlds_class.connected, true);
+  assert.equal(payload.meta.contentCatalog.learnworlds_class.items[0].title, 'Seller 365 Live Onboarding Class');
   assert.equal(
     payload.meta.enrollmentTimestampStatus.source,
     '/admin/api/v2/users/{user_id}/courses.created'
@@ -288,6 +343,14 @@ test('LearnWorlds API source returns partial data when progress requests are rat
       });
     }
 
+    if (url.pathname === '/blog') {
+      return new Response('not found', { status: 404 });
+    }
+
+    if (url.pathname === '/classes') {
+      return new Response('not found', { status: 404 });
+    }
+
     throw new Error(`Unexpected LearnWorlds path ${url.pathname}${url.search}`);
   };
 
@@ -316,6 +379,8 @@ test('LearnWorlds API source returns partial data when progress requests are rat
     /LearnWorlds progressRows: rate-limited for user user-1/
   );
   assert.equal(payload.meta.endpointSummary.rateLimitRetryCount > 0, true);
+  assert.equal(payload.meta.contentCatalog.learnworlds_blog.connected, false);
+  assert.equal(payload.meta.contentCatalog.learnworlds_class.connected, false);
 });
 
 test('LearnWorlds API source uses cached dataset payloads on repeat loads', async () => {
@@ -336,6 +401,14 @@ test('LearnWorlds API source uses cached dataset payloads on repeat loads', asyn
         data: [],
         meta: { page: 1, totalItems: 0, totalPages: 1, itemsPerPage: 20 },
       });
+    }
+
+    if (url.pathname === '/blog') {
+      return new Response('not found', { status: 404 });
+    }
+
+    if (url.pathname === '/classes') {
+      return new Response('not found', { status: 404 });
     }
 
     throw new Error(`Unexpected LearnWorlds path ${url.pathname}${url.search}`);
@@ -363,7 +436,7 @@ test('LearnWorlds API source uses cached dataset payloads on repeat loads', asyn
 
   assert.equal(firstPayload.meta.cache.cacheHit, false);
   assert.equal(secondPayload.meta.cache.cacheHit, true);
-  assert.equal(requestCount, 2);
+  assert.equal(requestCount, 4);
 });
 
 test('LearnWorlds API source fails safely when required env is missing', async () => {

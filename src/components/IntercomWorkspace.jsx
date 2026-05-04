@@ -13,9 +13,8 @@ import {
   Area,
   AreaChart,
 } from 'recharts';
-import { Filters } from './Filters.jsx';
-import { KeyMetrics } from './KeyMetrics.jsx';
-import { ChartGranularityControl } from './ChartGranularityControl.jsx';
+import { ReportPeriodControl } from './ReportPeriodControl.jsx';
+import KeyMetrics from './KeyMetrics.jsx';
 import { CsatReport } from './CsatReport.jsx';
 import {
   buildIntercomConversationTrend,
@@ -25,7 +24,13 @@ import {
   buildIntercomMetricCards,
   buildIntercomSatisfactionTrend,
   buildIntercomTopicExplorerData,
+  getIntercomTopicAvailability,
 } from '../metrics/dashboard.js';
+import { INTERCOM_TEAM_GROUPS, resolveIntercomGroupTeams } from '../utils/intercomTeamGroups.js';
+import {
+  getReportPeriodGranularityLabel,
+  inferReportPeriodGranularity,
+} from '../utils/reportPeriod.js';
 
 const PIE_COLORS = ['#16a34a', '#f59e0b', '#dc2626'];
 const GRID_STROKE = '#edf2f7';
@@ -62,7 +67,12 @@ const BaseTooltip = ({ active, payload, label }) => {
   );
 };
 
-const TopicExplorer = memo(({ title, topics, finVariant = false }) => {
+const TopicExplorer = memo(({
+  title,
+  topics,
+  finVariant = false,
+  emptyMessage = 'No topic data is available for the selected filters.',
+}) => {
   const maxValue = topics[0]?.value || 1;
 
   return (
@@ -96,6 +106,9 @@ const TopicExplorer = memo(({ title, topics, finVariant = false }) => {
                     <span>{topic.value.toLocaleString()} conversations</span>
                     {topic.cxScore !== null && <span>{topic.cxScore}% CX score</span>}
                   </div>
+                  {topic.issueSummary && (
+                    <p className="dashboard-topic-popover-summary">{topic.issueSummary}</p>
+                  )}
                   <div className="topic-popover-details">
                     {topic.subtopics[0] && (
                       <p><strong>Subtopic</strong><span>{topic.subtopics[0].name}</span></p>
@@ -116,7 +129,7 @@ const TopicExplorer = memo(({ title, topics, finVariant = false }) => {
           })}
         </div>
       ) : (
-        <EmptyState message="No topic data is available for the selected filters." />
+        <EmptyState message={emptyMessage} />
       )}
     </div>
   );
@@ -171,11 +184,13 @@ const CsatBreakdownCard = memo(({ title, breakdown }) => (
   </div>
 ));
 
-const ConversationTrendChart = memo(({ data, granularity, onGranularityChange }) => (
+const ConversationTrendChart = memo(({ data, granularityLabel }) => (
   <div className="chart-card glass-panel wide">
     <div className="chart-card-header">
-      <h3 className="chart-title">Conversation Chart</h3>
-      <ChartGranularityControl value={granularity} onChange={onGranularityChange} compact />
+      <div>
+        <h3 className="chart-title">Conversation Chart</h3>
+        <p className="chart-support-copy">Time buckets are grouped automatically by {granularityLabel}.</p>
+      </div>
     </div>
     <div className="chart-wrapper">
       {data.length > 0 ? (
@@ -208,11 +223,13 @@ const ConversationTrendChart = memo(({ data, granularity, onGranularityChange })
   </div>
 ));
 
-const CsatComparisonChart = memo(({ data, granularity, onGranularityChange }) => (
+const CsatComparisonChart = memo(({ data, granularityLabel }) => (
   <div className="chart-card glass-panel wide">
     <div className="chart-card-header">
-      <h3 className="chart-title">CSAT Team vs Fin AI</h3>
-      <ChartGranularityControl value={granularity} onChange={onGranularityChange} compact />
+      <div>
+        <h3 className="chart-title">CSAT Team vs Fin AI</h3>
+        <p className="chart-support-copy">Time buckets are grouped automatically by {granularityLabel}.</p>
+      </div>
     </div>
     <div className="chart-wrapper">
       {data.length > 0 ? (
@@ -235,17 +252,16 @@ const CsatComparisonChart = memo(({ data, granularity, onGranularityChange }) =>
 
 const FinOutcomeCharts = memo(({
   rateData,
-  rateGranularity,
-  onRateGranularityChange,
   csatData,
-  csatGranularity,
-  onCsatGranularityChange,
+  granularityLabel,
 }) => (
   <>
     <div className="chart-card glass-panel wide">
       <div className="chart-card-header">
-        <h3 className="chart-title">Fin AI Outcomes</h3>
-        <ChartGranularityControl value={rateGranularity} onChange={onRateGranularityChange} compact />
+        <div>
+          <h3 className="chart-title">Fin AI Outcomes</h3>
+          <p className="chart-support-copy">Time buckets are grouped automatically by {granularityLabel}.</p>
+        </div>
       </div>
       <div className="chart-wrapper">
         {rateData.length > 0 ? (
@@ -267,8 +283,10 @@ const FinOutcomeCharts = memo(({
 
     <div className="chart-card glass-panel wide">
       <div className="chart-card-header">
-        <h3 className="chart-title">Fin AI Agent CSAT</h3>
-        <ChartGranularityControl value={csatGranularity} onChange={onCsatGranularityChange} compact />
+        <div>
+          <h3 className="chart-title">Fin AI Agent CSAT</h3>
+          <p className="chart-support-copy">Time buckets are grouped automatically by {granularityLabel}.</p>
+        </div>
       </div>
       <div className="chart-wrapper">
         {csatData.length > 0 ? (
@@ -295,38 +313,140 @@ const FinOutcomeCharts = memo(({
   </>
 ));
 
+const IntercomTopControls = memo(({
+  availableTeams,
+  filters,
+  onLocalFilterChange,
+  dateRange,
+  onDateRangeChange,
+  anchorDate,
+}) => {
+  const teamOptions = useMemo(() => ([
+    { value: 'all', label: 'All teams' },
+    ...INTERCOM_TEAM_GROUPS.map((group) => ({
+      value: `group:${group.value}`,
+      label: group.label,
+    })),
+    ...availableTeams.map((team) => ({
+      value: `team:${team}`,
+      label: team,
+    })),
+  ]), [availableTeams]);
+
+  const selectedTeamValue = useMemo(() => {
+    if (filters.teamGroup) {
+      return `group:${filters.teamGroup}`;
+    }
+
+    if (filters.team?.length === 1) {
+      return `team:${filters.team[0]}`;
+    }
+
+    return 'all';
+  }, [filters.team, filters.teamGroup]);
+
+  const handleTeamChange = (event) => {
+    const nextValue = event.target.value;
+
+    onLocalFilterChange((previous) => {
+      if (nextValue === 'all') {
+        return {
+          ...previous,
+          teamGroup: '',
+          team: [],
+          teammate: [],
+        };
+      }
+
+      if (nextValue.startsWith('group:')) {
+        const teamGroup = nextValue.slice('group:'.length);
+        return {
+          ...previous,
+          teamGroup,
+          team: resolveIntercomGroupTeams(teamGroup, availableTeams),
+          teammate: [],
+        };
+      }
+
+      return {
+        ...previous,
+        teamGroup: '',
+        team: [nextValue.slice('team:'.length)],
+        teammate: [],
+      };
+    });
+  };
+
+  return (
+    <div className="workspace-controls-row">
+      <div className="workspace-controls-group">
+        <label className="workspace-control-field">
+          <span>Team</span>
+          <select
+            value={selectedTeamValue}
+            onChange={handleTeamChange}
+            className="glass-input section-control-select"
+          >
+            {teamOptions.map((option) => (
+              <option key={option.value} value={option.value}>{option.label}</option>
+            ))}
+          </select>
+        </label>
+
+        <div className="workspace-control-field">
+          <span>Report period</span>
+          <ReportPeriodControl
+            dateRange={dateRange}
+            onDateRangeChange={onDateRangeChange}
+            anchorDate={anchorDate}
+          />
+        </div>
+      </div>
+    </div>
+  );
+});
+
 const IntercomUnifiedSection = memo(({ normalizedData, filters, comparisonGranularity }) => {
-  const [conversationGranularity, setConversationGranularity] = useState('weekly');
-  const [csatGranularity, setCsatGranularity] = useState('weekly');
-  const [rateGranularity, setRateGranularity] = useState('weekly');
-  const [finCsatGranularity, setFinCsatGranularity] = useState('weekly');
+  const chartGranularity = useMemo(() => inferReportPeriodGranularity(filters), [filters]);
+  const chartGranularityLabel = useMemo(
+    () => getReportPeriodGranularityLabel(chartGranularity),
+    [chartGranularity]
+  );
 
   const metrics = useMemo(
     () => buildIntercomMetricCards(normalizedData, filters, comparisonGranularity, 'overview'),
     [normalizedData, filters, comparisonGranularity]
   );
   const conversationTrend = useMemo(
-    () => buildIntercomConversationTrend(normalizedData, filters, conversationGranularity),
-    [normalizedData, filters, conversationGranularity]
+    () => buildIntercomConversationTrend(normalizedData, filters, chartGranularity),
+    [normalizedData, filters, chartGranularity]
   );
   const csatTrend = useMemo(
-    () => buildIntercomSatisfactionTrend(normalizedData, filters, csatGranularity),
-    [normalizedData, filters, csatGranularity]
+    () => buildIntercomSatisfactionTrend(normalizedData, filters, chartGranularity),
+    [normalizedData, filters, chartGranularity]
   );
   const finOutcomeTrend = useMemo(
-    () => buildIntercomFinOutcomeTrend(normalizedData, filters, rateGranularity),
-    [normalizedData, filters, rateGranularity]
+    () => buildIntercomFinOutcomeTrend(normalizedData, filters, chartGranularity),
+    [normalizedData, filters, chartGranularity]
   );
   const finCsatTrend = useMemo(
-    () => buildIntercomFinCsatTrend(normalizedData, filters, finCsatGranularity),
-    [normalizedData, filters, finCsatGranularity]
+    () => buildIntercomFinCsatTrend(normalizedData, filters, chartGranularity),
+    [normalizedData, filters, chartGranularity]
   );
   const topTopics = useMemo(
     () => buildIntercomTopicExplorerData(normalizedData, filters, 'all'),
     [normalizedData, filters]
   );
+  const topTopicAvailability = useMemo(
+    () => getIntercomTopicAvailability(normalizedData, filters, 'all'),
+    [normalizedData, filters]
+  );
   const topFinTopics = useMemo(
     () => buildIntercomTopicExplorerData(normalizedData, filters, 'fin'),
+    [normalizedData, filters]
+  );
+  const topFinTopicAvailability = useMemo(
+    () => getIntercomTopicAvailability(normalizedData, filters, 'fin'),
     [normalizedData, filters]
   );
   const csatBreakdown = useMemo(
@@ -345,21 +465,16 @@ const IntercomUnifiedSection = memo(({ normalizedData, filters, comparisonGranul
         <div className="charts-container">
           <ConversationTrendChart
             data={conversationTrend}
-            granularity={conversationGranularity}
-            onGranularityChange={setConversationGranularity}
+            granularityLabel={chartGranularityLabel}
           />
           <CsatComparisonChart
             data={csatTrend}
-            granularity={csatGranularity}
-            onGranularityChange={setCsatGranularity}
+            granularityLabel={chartGranularityLabel}
           />
           <FinOutcomeCharts
             rateData={finOutcomeTrend}
-            rateGranularity={rateGranularity}
-            onRateGranularityChange={setRateGranularity}
             csatData={finCsatTrend}
-            csatGranularity={finCsatGranularity}
-            onCsatGranularityChange={setFinCsatGranularity}
+            granularityLabel={chartGranularityLabel}
           />
         </div>
       </div>
@@ -369,8 +484,25 @@ const IntercomUnifiedSection = memo(({ normalizedData, filters, comparisonGranul
           <h3>Topics</h3>
         </div>
         <div className="charts-container topic-grid-section">
-          <TopicExplorer title="Top Topics" topics={topTopics} />
-          <TopicExplorer title="Top Fin AI Topics" topics={topFinTopics} finVariant />
+          <TopicExplorer
+            title="Top Topics"
+            topics={topTopics}
+            emptyMessage={
+              topTopicAvailability.hasRows && !topTopicAvailability.hasTopicData
+                ? 'Topic data is not currently available from the Intercom API for this dataset.'
+                : 'No topic data is available for the selected filters.'
+            }
+          />
+          <TopicExplorer
+            title="Top Fin AI Topics"
+            topics={topFinTopics}
+            finVariant
+            emptyMessage={
+              topFinTopicAvailability.hasRows && !topFinTopicAvailability.hasTopicData
+                ? 'Topic data is not currently available from the Intercom API for this dataset.'
+                : 'No topic data is available for the selected filters.'
+            }
+          />
         </div>
       </div>
 
@@ -394,23 +526,34 @@ export const IntercomOverviewSection = memo(({
   showFeed = false,
   showCsatBreakdown = true,
 }) => {
-  const [conversationGranularity, setConversationGranularity] = useState('weekly');
-  const [csatGranularity, setCsatGranularity] = useState('weekly');
+  const chartGranularity = useMemo(() => inferReportPeriodGranularity(filters), [filters]);
+  const chartGranularityLabel = useMemo(
+    () => getReportPeriodGranularityLabel(chartGranularity),
+    [chartGranularity]
+  );
 
   const metrics = useMemo(
     () => buildIntercomMetricCards(normalizedData, filters, comparisonGranularity, 'overview'),
     [normalizedData, filters, comparisonGranularity]
   );
   const conversationTrend = useMemo(
-    () => buildIntercomConversationTrend(normalizedData, filters, conversationGranularity),
-    [normalizedData, filters, conversationGranularity]
+    () => buildIntercomConversationTrend(normalizedData, filters, chartGranularity),
+    [normalizedData, filters, chartGranularity]
   );
   const topTopics = useMemo(
     () => buildIntercomTopicExplorerData(normalizedData, filters, 'all'),
     [normalizedData, filters]
   );
+  const topTopicAvailability = useMemo(
+    () => getIntercomTopicAvailability(normalizedData, filters, 'all'),
+    [normalizedData, filters]
+  );
   const topFinTopics = useMemo(
     () => buildIntercomTopicExplorerData(normalizedData, filters, 'fin'),
+    [normalizedData, filters]
+  );
+  const topFinTopicAvailability = useMemo(
+    () => getIntercomTopicAvailability(normalizedData, filters, 'fin'),
     [normalizedData, filters]
   );
   const csatBreakdown = useMemo(
@@ -418,8 +561,8 @@ export const IntercomOverviewSection = memo(({
     [normalizedData, filters]
   );
   const csatTrend = useMemo(
-    () => buildIntercomSatisfactionTrend(normalizedData, filters, csatGranularity),
-    [normalizedData, filters, csatGranularity]
+    () => buildIntercomSatisfactionTrend(normalizedData, filters, chartGranularity),
+    [normalizedData, filters, chartGranularity]
   );
 
   return (
@@ -428,16 +571,31 @@ export const IntercomOverviewSection = memo(({
       <div className="charts-container">
         <ConversationTrendChart
           data={conversationTrend}
-          granularity={conversationGranularity}
-          onGranularityChange={setConversationGranularity}
+          granularityLabel={chartGranularityLabel}
         />
         <CsatComparisonChart
           data={csatTrend}
-          granularity={csatGranularity}
-          onGranularityChange={setCsatGranularity}
+          granularityLabel={chartGranularityLabel}
         />
-        <TopicExplorer title="Top Topics" topics={topTopics} />
-        <TopicExplorer title="Top Fin AI Topics" topics={topFinTopics} finVariant />
+        <TopicExplorer
+          title="Top Topics"
+          topics={topTopics}
+          emptyMessage={
+            topTopicAvailability.hasRows && !topTopicAvailability.hasTopicData
+              ? 'Topic data is not currently available from the Intercom API for this dataset.'
+              : 'No topic data is available for the selected filters.'
+          }
+        />
+        <TopicExplorer
+          title="Top Fin AI Topics"
+          topics={topFinTopics}
+          finVariant
+          emptyMessage={
+            topFinTopicAvailability.hasRows && !topFinTopicAvailability.hasTopicData
+              ? 'Topic data is not currently available from the Intercom API for this dataset.'
+              : 'No topic data is available for the selected filters.'
+          }
+        />
         {showCsatBreakdown && (
           <CsatBreakdownCard title="CSAT Breakdown" breakdown={csatBreakdown} />
         )}
@@ -449,13 +607,15 @@ export const IntercomOverviewSection = memo(({
   );
 });
 
-export const IntercomWorkspace = memo(({
+const IntercomWorkspace = memo(({
   normalizedData,
+  loading,
+  error,
   availableTeams,
-  availableTeammates,
   sharedFilters,
   localFilters,
   onLocalFilterChange,
+  onSharedDateRangeChange,
   comparisonGranularity,
 }) => {
   const scopedFilters = useMemo(
@@ -466,17 +626,37 @@ export const IntercomWorkspace = memo(({
     [sharedFilters, localFilters]
   );
 
+  if (loading && !normalizedData) {
+    return (
+      <div className="workspace-panel">
+        <div className="learning-empty-panel glass-panel">
+          <h3>Loading Intercom</h3>
+          <p>Fetching Intercom metrics...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error && !normalizedData) {
+    return (
+      <div className="workspace-panel">
+        <div className="learning-empty-panel glass-panel">
+          <h3>Intercom unavailable</h3>
+          <p>{error}</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="workspace-panel">
-      <Filters
+      <IntercomTopControls
         availableTeams={availableTeams}
-        availableTeammates={availableTeammates}
-        filters={scopedFilters}
-        granularity={comparisonGranularity}
-        onFilterChange={onLocalFilterChange}
-        onGranularityChange={() => {}}
-        showDateControls={false}
-        showGranularityControl={false}
+        filters={localFilters}
+        onLocalFilterChange={onLocalFilterChange}
+        dateRange={sharedFilters}
+        onDateRangeChange={onSharedDateRangeChange}
+        anchorDate={normalizedData?.dateBounds?.started_at?.maxDate}
       />
 
       <IntercomUnifiedSection
@@ -487,3 +667,5 @@ export const IntercomWorkspace = memo(({
     </div>
   );
 });
+
+export default IntercomWorkspace;

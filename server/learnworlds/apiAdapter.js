@@ -13,6 +13,7 @@ const MAX_CONCURRENT_REQUESTS = 2;
 const USER_MEMBERSHIP_CONCURRENCY = 2;
 const USER_PROGRESS_CONCURRENCY = 2;
 const COURSE_ANALYTICS_CONCURRENCY = 2;
+const OVERVIEW_ENROLLMENT_USER_LIMIT = 25;
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -57,6 +58,46 @@ const normalizeTimestamp = (value) => {
 
 const ensureArray = (value) => (Array.isArray(value) ? value : []);
 
+const stripHtmlTags = (value) =>
+  typeof value === 'string' ? value.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim() : '';
+
+const decodeHtmlEntities = (value) =>
+  (value || '')
+    .replace(/&amp;/g, '&')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>');
+
+const absoluteUrlOrNull = (value, baseUrl) => {
+  const normalized = normalizeText(value);
+
+  if (!normalized) {
+    return null;
+  }
+
+  try {
+    return new URL(normalized, baseUrl).toString();
+  } catch {
+    return null;
+  }
+};
+
+const uniqueBy = (items, getKey) => {
+  const seen = new Set();
+
+  return items.filter((item) => {
+    const key = getKey(item);
+
+    if (!key || seen.has(key)) {
+      return false;
+    }
+
+    seen.add(key);
+    return true;
+  });
+};
+
 const buildValidationError = (validation) => {
   const parts = [];
 
@@ -71,12 +112,15 @@ const buildValidationError = (validation) => {
   return parts.join('. ');
 };
 
-const buildDatasetCacheKey = (config) => [
+const buildDatasetCacheKey = (config, loadMode) => [
   'learnworlds-datasets',
   config.apiBaseUrl,
   config.clientId || 'no-client',
+  `mode:${loadMode}`,
   `pages:${config.initialPageLimit}`,
 ].join(':');
+
+const normalizeLoadMode = (value) => (value === 'overview' ? 'overview' : 'full');
 
 const createApiError = ({ path, status, bodyPreview, code }) => {
   const error = new Error(
@@ -192,6 +236,25 @@ const createMetricsCollector = (config) => ({
   datasetCacheTtlMs: config.datasetCacheTtlMs,
 });
 
+const fetchWithTimeout = async (fetchImpl, resource, options, timeoutMs) => {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
+  try {
+    return await fetchImpl(resource, {
+      ...options,
+      signal: controller.signal,
+    });
+  } finally {
+    clearTimeout(timeoutId);
+  }
+};
+
+const summarizeDatasetCounts = (datasets) =>
+  Object.fromEntries(
+    Object.entries(datasets).map(([key, rows]) => [key, Array.isArray(rows) ? rows.length : 0])
+  );
+
 const learnWorldsRequest = async ({
   config,
   path,
@@ -201,38 +264,66 @@ const learnWorldsRequest = async ({
   attempt = 0,
 }) => {
   const requestStartedAt = Date.now();
-  const response = await scheduler.schedule(() =>
-    fetchImpl(new URL(path, config.apiBaseUrl), {
-      headers: {
-        'Lw-Client': config.clientId,
-        Authorization: `Bearer ${config.apiKey}`,
-        Accept: 'application/json',
-      },
-    })
-  );
+  const requestUrl = new URL(path, config.apiBaseUrl);
+  console.info(`[LearnWorlds API] Request ${requestUrl.toString()}`);
+
+  let response;
+
+  try {
+    response = await scheduler.schedule(() =>
+      fetchWithTimeout(
+        fetchImpl,
+        requestUrl,
+        {
+          headers: {
+            'Lw-Client': config.clientId,
+            Authorization: `Bearer ${config.apiKey}`,
+            Accept: 'application/json',
+          },
+        },
+        config.requestTimeoutMs
+      )
+    );
+  } catch (error) {
+    const timeoutMessage =
+      error?.name === 'AbortError'
+        ? `LearnWorlds API request timed out after ${config.requestTimeoutMs}ms for ${path}`
+        : `LearnWorlds API network request failed for ${path}: ${error?.message || 'Unknown error'}`;
+    const message = timeoutMessage;
+    console.error(`[LearnWorlds API] Request error ${requestUrl.toString()}: ${message}`);
+    throw new Error(message);
+  }
 
   metrics.requestCount += 1;
   metrics.requestDurationsMs.push(Date.now() - requestStartedAt);
+  console.info(`[LearnWorlds API] Response ${response.status} for ${requestUrl.toString()}`);
 
   if (response.ok) {
     return response.json();
   }
 
   const body = await response.text();
+  console.error(
+    `[LearnWorlds API] Request failed ${response.status} for ${requestUrl.toString()}: ${body.slice(0, 200)}`
+  );
   const error = createApiError({
     path,
     status: response.status,
     bodyPreview: body.slice(0, 200),
   });
 
+  if (error.rateLimited) {
+    console.warn(
+      `[LearnWorlds API] Rate limited for ${requestUrl.toString()}. Returning partial datasets without retry.`
+    );
+    metrics.rateLimitRetryCount += 1;
+    throw error;
+  }
+
   if (error.retryable && attempt < MAX_RETRIES) {
     const retryDelayMs = calculateRetryDelayMs({ attempt, response });
     metrics.retryCount += 1;
     metrics.retryDelayMsApplied.push(retryDelayMs);
-
-    if (error.rateLimited) {
-      metrics.rateLimitRetryCount += 1;
-    }
 
     await delay(retryDelayMs);
 
@@ -515,6 +606,7 @@ const buildMeta = ({
   datasetStatuses,
   runtimeWarnings,
   cacheHit,
+  contentCatalog,
 }) => {
   const rowCounts = {
     userRows: datasets.userRows.length,
@@ -574,6 +666,8 @@ const buildMeta = ({
       userCourses: '/admin/api/v2/users/{user_id}/courses',
       userProgress: '/admin/api/v2/users/{user_id}/progress',
       courseAnalytics: '/admin/api/v2/courses/{course_id}/analytics',
+      blogCatalog: contentCatalog?.learnworlds_blog?.source || '/blog',
+      classCatalog: contentCatalog?.learnworlds_class?.source || '/classes',
       requestCount: metrics.requestCount,
       avgRequestDurationMs:
         metrics.requestDurationsMs.length > 0
@@ -600,7 +694,9 @@ const buildMeta = ({
       'LearnWorlds does not expose a stable enrollment id in the current user-courses response, so enrollment_id remains synthetic.',
       'Progress rows come from /admin/api/v2/users/{user_id}/progress, which does not currently expose last_activity_at consistently.',
       'activityAnalyticsRows are course-level aggregates from /admin/api/v2/courses/{course_id}/analytics, not per-activity analytics rows.',
+      'LearnWorlds blog and class coverage use conservative public metadata extraction when those public indexes are available.',
     ],
+    contentCatalog,
   };
 };
 
@@ -937,7 +1033,239 @@ const fetchCourseAnalyticsRows = async ({ config, courseRows, fetchImpl, metrics
   };
 };
 
-const buildPayloadFromLiveData = async ({ config, fetchImpl }) => {
+const fetchPublicText = async ({ url, fetchImpl, scheduler, metrics }) => {
+  const requestStartedAt = Date.now();
+  const response = await scheduler.schedule(() =>
+    fetchWithTimeout(
+      fetchImpl,
+      url,
+      {
+        headers: {
+          Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,text/xml;q=0.9,*/*;q=0.8',
+        },
+      },
+      10000
+    )
+  );
+
+  metrics.requestCount += 1;
+  metrics.requestDurationsMs.push(Date.now() - requestStartedAt);
+
+  if (!response.ok) {
+    const bodyPreview = (await response.text()).slice(0, 200);
+    throw createApiError({
+      path: url.pathname,
+      status: response.status,
+      bodyPreview,
+      code: 'learnworlds_public_metadata_failed',
+    });
+  }
+
+  return response.text();
+};
+
+const extractJsonLdBlocks = (html) => {
+  const blocks = [];
+  const pattern = /<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi;
+
+  let match = pattern.exec(html);
+  while (match) {
+    blocks.push(match[1]);
+    match = pattern.exec(html);
+  }
+
+  return blocks;
+};
+
+const collectJsonLdObjectsByTypes = (value, targetTypes, collector = []) => {
+  if (!value) {
+    return collector;
+  }
+
+  if (Array.isArray(value)) {
+    value.forEach((item) => collectJsonLdObjectsByTypes(item, targetTypes, collector));
+    return collector;
+  }
+
+  if (typeof value !== 'object') {
+    return collector;
+  }
+
+  const types = (Array.isArray(value['@type']) ? value['@type'] : [value['@type']])
+    .filter(Boolean)
+    .map((item) => String(item).toLowerCase());
+
+  if (types.some((type) => targetTypes.includes(type))) {
+    collector.push(value);
+  }
+
+  Object.values(value).forEach((nested) => collectJsonLdObjectsByTypes(nested, targetTypes, collector));
+  return collector;
+};
+
+const mapBlogPostingObject = (entry, origin) => {
+  const title = normalizeText(entry.headline || entry.name || entry.title);
+  const url = absoluteUrlOrNull(
+    entry.url || entry.mainEntityOfPage?.['@id'] || entry.mainEntityOfPage?.url,
+    origin
+  );
+  const categories = ensureArray(entry.articleSection)
+    .map((value) => normalizeText(value))
+    .filter(Boolean);
+  const tags = ensureArray(entry.keywords)
+    .flatMap((value) =>
+      typeof value === 'string' ? value.split(',') : [value?.name || value?.title || value]
+    )
+    .map((value) => normalizeText(value))
+    .filter(Boolean);
+
+  if (!title || !url) {
+    return null;
+  }
+
+  return {
+    title,
+    url,
+    categories,
+    tags,
+    freshness:
+      normalizeTimestamp(entry.dateModified) ||
+      normalizeTimestamp(entry.datePublished) ||
+      null,
+  };
+};
+
+const mapAnchorMatches = ({ html, origin, pattern, contentType }) => {
+  const matches = [];
+  let match = pattern.exec(html);
+  while (match) {
+    const url = absoluteUrlOrNull(match[1], origin);
+    const title = normalizeText(decodeHtmlEntities(stripHtmlTags(match[2])));
+
+    if (url && title && title.length >= 4) {
+      matches.push({
+        title,
+        url,
+        categories: [],
+        tags: [],
+        freshness: null,
+        content_type: contentType,
+      });
+    }
+
+    match = pattern.exec(html);
+  }
+
+  return matches;
+};
+
+const buildCatalogItems = (items) =>
+  uniqueBy(
+    items
+      .filter(Boolean)
+      .map((item) => ({
+        ...item,
+        searchable_text: [item.title, ...(item.categories || []), ...(item.tags || [])]
+          .filter(Boolean)
+          .join(' ')
+          .toLowerCase(),
+      })),
+    (item) => item.url || item.title
+  );
+
+const fetchLearnWorldsPublicCatalog = async ({
+  config,
+  fetchImpl,
+  metrics,
+  scheduler,
+  path,
+  contentType,
+  sourceLabel,
+  jsonLdTypes,
+  anchorPattern,
+}) => {
+  const origin = new URL(config.apiBaseUrl).origin;
+  const pageUrl = new URL(path, origin);
+
+  try {
+    const html = await fetchPublicText({
+      url: pageUrl,
+      fetchImpl,
+      scheduler,
+      metrics,
+    });
+
+    const jsonLdItems = extractJsonLdBlocks(html)
+      .flatMap((block) => {
+        try {
+          return collectJsonLdObjectsByTypes(JSON.parse(block), jsonLdTypes);
+        } catch {
+          return [];
+        }
+      })
+      .map((entry) => {
+        const mapped = mapBlogPostingObject(entry, origin);
+        return mapped ? { ...mapped, content_type: contentType } : null;
+      })
+      .filter(Boolean);
+
+    const items = buildCatalogItems(
+      jsonLdItems.length > 0
+        ? jsonLdItems
+        : mapAnchorMatches({ html, origin, pattern: anchorPattern, contentType })
+    );
+
+    if (items.length === 0) {
+      return {
+        connected: false,
+        source: pageUrl.toString(),
+        explanation:
+          `The LearnWorlds ${sourceLabel} path is reachable, but no conservative ${sourceLabel} metadata could be extracted from the public index.`,
+        items: [],
+      };
+    }
+
+    return {
+      connected: true,
+      source: pageUrl.toString(),
+      explanation: `LearnWorlds ${sourceLabel} metadata was extracted conservatively from the public index.`,
+      items,
+    };
+  } catch (error) {
+    return {
+      connected: false,
+      source: pageUrl.toString(),
+      explanation:
+        error?.status === 404
+          ? `The LearnWorlds ${sourceLabel} path is not available for this school.`
+          : `The LearnWorlds public ${sourceLabel} metadata path could not be loaded in the current environment.`,
+      items: [],
+      error,
+    };
+  }
+};
+
+const fetchLearnWorldsBlogCatalog = async (args) =>
+  fetchLearnWorldsPublicCatalog({
+    ...args,
+    path: '/blog',
+    contentType: 'blog',
+    sourceLabel: 'blog',
+    jsonLdTypes: ['blogposting', 'article', 'newsarticle'],
+    anchorPattern: /<a[^>]+href=["']([^"']*\/blog\/[^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi,
+  });
+
+const fetchLearnWorldsClassCatalog = async (args) =>
+  fetchLearnWorldsPublicCatalog({
+    ...args,
+    path: '/classes',
+    contentType: 'class',
+    sourceLabel: 'class',
+    jsonLdTypes: ['course', 'courseinstance', 'educationevent', 'event'],
+    anchorPattern: /<a[^>]+href=["']([^"']*\/class(?:es)?\/[^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi,
+  });
+
+const buildPayloadFromLiveData = async ({ config, fetchImpl, loadMode }) => {
   const metrics = createMetricsCollector(config);
   const scheduler = createRequestScheduler({
     requestDelayMs: config.requestDelayMs,
@@ -945,7 +1273,7 @@ const buildPayloadFromLiveData = async ({ config, fetchImpl }) => {
   });
   const runtimeWarnings = [];
 
-  const [userDataset, courseDataset] = await Promise.all([
+  const [userDataset, courseDataset, blogCatalog, classCatalog] = await Promise.all([
     fetchCollectionDataset({
       config,
       datasetKey: 'userRows',
@@ -964,12 +1292,35 @@ const buildPayloadFromLiveData = async ({ config, fetchImpl }) => {
       scheduler,
       mapper: mapCourseRow,
     }),
+    fetchLearnWorldsBlogCatalog({
+      config,
+      fetchImpl,
+      metrics,
+      scheduler,
+    }),
+    fetchLearnWorldsClassCatalog({
+      config,
+      fetchImpl,
+      metrics,
+      scheduler,
+    }),
   ]);
 
   runtimeWarnings.push(...userDataset.warnings, ...courseDataset.warnings);
+  if (blogCatalog.error) {
+    runtimeWarnings.push(
+      `LearnWorlds blog metadata: ${blogCatalog.explanation}`
+    );
+  }
+  if (classCatalog.error) {
+    runtimeWarnings.push(
+      `LearnWorlds class metadata: ${classCatalog.explanation}`
+    );
+  }
 
   const userRows = userDataset.rows;
   const courseRows = courseDataset.rows;
+  const overviewMode = loadMode === 'overview';
 
   let enrollmentDataset = {
     rows: [],
@@ -996,30 +1347,83 @@ const buildPayloadFromLiveData = async ({ config, fetchImpl }) => {
   };
 
   if (userRows.length > 0) {
+    const enrollmentUsers = overviewMode
+      ? userRows.slice(0, OVERVIEW_ENROLLMENT_USER_LIMIT)
+      : userRows;
+
     enrollmentDataset = await fetchEnrollmentRows({
       config,
-      userRows,
+      userRows: enrollmentUsers,
       fetchImpl,
       metrics,
       scheduler,
     });
-    progressDataset = await fetchProgressRows({
-      config,
-      userRows,
-      fetchImpl,
-      metrics,
-      scheduler,
-    });
+
+    if (overviewMode && userRows.length > enrollmentUsers.length) {
+      enrollmentDataset = {
+        ...enrollmentDataset,
+        status: createDatasetStatus('partial', {
+          ...enrollmentDataset.status,
+          reason:
+            'Dashboard overview mode samples recent enrollments only to keep LearnWorlds responsive.',
+        }),
+        warnings: [
+          ...enrollmentDataset.warnings,
+          formatDatasetWarning(
+            'enrollmentRows',
+            `overview mode sampled the ${enrollmentUsers.length} most recent users for dashboard responsiveness`
+          ),
+        ],
+      };
+    }
+
+    if (!overviewMode) {
+      progressDataset = await fetchProgressRows({
+        config,
+        userRows,
+        fetchImpl,
+        metrics,
+        scheduler,
+      });
+    } else {
+      progressDataset = {
+        rows: [],
+        status: createDatasetStatus('partial', {
+          reason: 'Skipped in dashboard overview mode to avoid LearnWorlds rate limits.',
+        }),
+        warnings: [
+          formatDatasetWarning(
+            'progressRows',
+            'skipped in dashboard overview mode to reduce LearnWorlds request volume'
+          ),
+        ],
+      };
+    }
   }
 
   if (courseRows.length > 0) {
-    activityAnalyticsDataset = await fetchCourseAnalyticsRows({
-      config,
-      courseRows,
-      fetchImpl,
-      metrics,
-      scheduler,
-    });
+    if (!overviewMode) {
+      activityAnalyticsDataset = await fetchCourseAnalyticsRows({
+        config,
+        courseRows,
+        fetchImpl,
+        metrics,
+        scheduler,
+      });
+    } else {
+      activityAnalyticsDataset = {
+        rows: [],
+        status: createDatasetStatus('partial', {
+          reason: 'Skipped in dashboard overview mode to avoid LearnWorlds rate limits.',
+        }),
+        warnings: [
+          formatDatasetWarning(
+            'activityAnalyticsRows',
+            'skipped in dashboard overview mode to reduce LearnWorlds request volume'
+          ),
+        ],
+      };
+    }
   }
 
   runtimeWarnings.push(
@@ -1041,6 +1445,24 @@ const buildPayloadFromLiveData = async ({ config, fetchImpl }) => {
     enrollmentRows: enrollmentDataset.status,
     progressRows: progressDataset.status,
     activityAnalyticsRows: activityAnalyticsDataset.status,
+  };
+  const contentCatalog = {
+    learnworlds_blog: {
+      connected: blogCatalog.connected,
+      content_type: 'blog',
+      item_count: blogCatalog.items.length,
+      source: blogCatalog.source,
+      explanation: blogCatalog.explanation,
+      items: blogCatalog.items,
+    },
+    learnworlds_class: {
+      connected: classCatalog.connected,
+      content_type: 'class',
+      item_count: classCatalog.items.length,
+      source: classCatalog.source,
+      explanation: classCatalog.explanation,
+      items: classCatalog.items,
+    },
   };
 
   metrics.partialDatasetCount = Object.values(datasetStatuses).filter(
@@ -1080,6 +1502,8 @@ const buildPayloadFromLiveData = async ({ config, fetchImpl }) => {
       datasetStatuses,
       runtimeWarnings,
       cacheHit: false,
+      contentCatalog,
+      loadMode,
     }),
   });
 };
@@ -1088,23 +1512,36 @@ export const loadLearnWorldsApiSource = async ({
   rootDir = process.cwd(),
   env = process.env,
   fetchImpl = fetch,
+  loadMode = 'full',
 } = {}) => {
   const config = loadLearnWorldsServerEnv({ rootDir, env });
+  const normalizedLoadMode = normalizeLoadMode(loadMode);
+  console.info(
+    `[LearnWorlds API] Loading ${normalizedLoadMode} datasets from ${config.apiBaseUrl || '[missing base URL]'}`
+  );
   const validation = validateLearnWorldsServerEnv(config);
 
   if (!validation.isValid) {
+    console.error(
+      `[LearnWorlds API] Env validation failed: ${buildValidationError(validation)}`
+    );
     throw new Error(buildValidationError(validation));
   }
 
   if (config.dataSource !== 'api') {
+    console.error('[LearnWorlds API] LEARNWORLDS_DATA_SOURCE must be set to api.');
     throw new Error('LEARNWORLDS_DATA_SOURCE must be set to api before calling the LearnWorlds API route.');
   }
 
   const { value, cacheHit } = await readThroughCache({
-    key: buildDatasetCacheKey(config),
+    key: buildDatasetCacheKey(config, normalizedLoadMode),
     ttlMs: config.datasetCacheTtlMs,
-    loader: () => buildPayloadFromLiveData({ config, fetchImpl }),
+    loader: () => buildPayloadFromLiveData({ config, fetchImpl, loadMode: normalizedLoadMode }),
   });
+
+  console.info(
+    `[LearnWorlds API] Dataset counts ${JSON.stringify(summarizeDatasetCounts(value.datasets))}`
+  );
 
   return {
     ...value,
@@ -1116,6 +1553,7 @@ export const loadLearnWorldsApiSource = async ({
         datasetCacheTtlMs: config.datasetCacheTtlMs,
       },
       envMask: maskLearnWorldsServerConfig(config),
+      loadMode: normalizedLoadMode,
     },
   };
 };

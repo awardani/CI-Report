@@ -147,10 +147,12 @@ const MetricCard = memo(({ metric }) => {
   );
 });
 
-export const KeyMetrics = memo(({ metrics }) => (
+const KeyMetrics = memo(({ metrics }) => (
   <div className="metrics-grid">
     {metrics.map((metric) => (
       <MetricCard key={metric.id} metric={metric} />
     ))}
   </div>
 ));
+
+export default KeyMetrics;

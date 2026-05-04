@@ -26,13 +26,18 @@ export const readThroughCache = async ({ key, ttlMs, loader }) => {
     return { value: await existing.inFlightPromise, cacheHit: true };
   }
 
-  const inFlightPromise = loader().then((value) => {
-    memoryCache.set(key, {
-      value,
-      expiresAt: Date.now() + ttlMs,
+  const inFlightPromise = loader()
+    .then((value) => {
+      memoryCache.set(key, {
+        value,
+        expiresAt: Date.now() + ttlMs,
+      });
+      return value;
+    })
+    .catch((error) => {
+      memoryCache.delete(key);
+      throw error;
     });
-    return value;
-  });
 
   memoryCache.set(key, {
     inFlightPromise,

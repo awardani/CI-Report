@@ -9,85 +9,21 @@ import {
   YAxis,
 } from 'recharts';
 import { ArrowDown, ArrowUp, ExternalLink } from 'lucide-react';
-import { KeyMetrics } from './KeyMetrics.jsx';
-import { LearningFilters } from './LearningFilters.jsx';
-import { ChartGranularityControl } from './ChartGranularityControl.jsx';
+import KeyMetrics from './KeyMetrics.jsx';
+import { ReportPeriodControl } from './ReportPeriodControl.jsx';
 import { buildLearnWorldsDashboardViewModel, buildLearnWorldsCombinedTrend } from '../learnworlds/dashboard.js';
-import { applyLearnWorldsFilters, getLearnWorldsFilterOptions } from '../learnworlds/filtering.js';
-
-const EMPTY_FILTERS = {
-  courseIds: [],
-  authors: [],
-  categories: [],
-  accessTypes: [],
-};
+import {
+  getReportPeriodGranularityLabel,
+  inferReportPeriodGranularity,
+} from '../utils/reportPeriod.js';
 const GRID_STROKE = '#edf2f7';
 const AXIS_STROKE = '#d7e0ea';
 const AXIS_TICK = { fill: '#7c8a9a', fontSize: 12, fontWeight: 500 };
-
-const arraysEqual = (left, right) =>
-  left.length === right.length && left.every((value, index) => value === right[index]);
-
-const filtersMatch = (left, right) =>
-  arraysEqual(left.courseIds, right.courseIds) &&
-  arraysEqual(left.authors, right.authors) &&
-  arraysEqual(left.categories, right.categories) &&
-  arraysEqual(left.accessTypes, right.accessTypes);
-
-const sortValues = (values) => [...values].sort((left, right) => left.localeCompare(right));
-
-const buildPresetFilters = (presetId, presetCourseIds) => {
-  if (presetId === 'all_courses') {
-    return { ...EMPTY_FILTERS };
-  }
-
-  return {
-    ...EMPTY_FILTERS,
-    courseIds: presetCourseIds,
-  };
-};
-
-const buildPresetViews = (baseViewModel) => {
-  const mostEngagingCourseIds = baseViewModel.tables.mostEngagingCourses.rows
-    .slice(0, 5)
-    .map((row) => row.course_id)
-    .filter(Boolean);
-  const dropoutWatchCourseIds = baseViewModel.tables.mostDroppedOutCourses.rows
-    .slice(0, 5)
-    .map((row) => row.course_id)
-    .filter(Boolean);
-  const newLearnerActivityCourseIds = baseViewModel.tables.mostPopularCourses.rows
-    .slice(0, 5)
-    .map((row) => row.course_id)
-    .filter(Boolean);
-
-  return [
-    {
-      id: 'all_courses',
-      label: 'All courses',
-      description: 'Show the full university catalog.',
-      filters: buildPresetFilters('all_courses', []),
-    },
-    {
-      id: 'high_engagement',
-      label: 'High engagement',
-      description: 'Focus on the current top engagement courses.',
-      filters: buildPresetFilters('high_engagement', sortValues(mostEngagingCourseIds)),
-    },
-    {
-      id: 'dropout_watch',
-      label: 'Dropout watch',
-      description: 'Focus on courses with the strongest dropout proxy.',
-      filters: buildPresetFilters('dropout_watch', sortValues(dropoutWatchCourseIds)),
-    },
-    {
-      id: 'new_learner_activity',
-      label: 'New learner activity',
-      description: 'Focus on courses with recent learner enrollments.',
-      filters: buildPresetFilters('new_learner_activity', sortValues(newLearnerActivityCourseIds)),
-    },
-  ];
-};
+const UNIVERSITY_TREND_SERIES = [
+  { key: 'lw_new_registrations', label: 'New registrations', color: '#0f766e' },
+  { key: 'lw_enrollees', label: 'Enrollees', color: '#2563eb' },
+  { key: 'lw_active_users', label: 'Active users', color: '#0891b2' },
+];
 
 const defaultTableState = (table) => ({
   sortKey: table.defaultSort?.key ?? null,
@@ -202,7 +138,6 @@ const LearningTable = memo(({ table, state, onStateChange }) => {
       <div className="learning-table-header">
         <div>
           <h3 className="chart-title">{table.title}</h3>
-          {table.note && <p className="learning-card-note">{table.note}</p>}
         </div>
         {table.supportState === 'partial' && <span className="learning-table-state">Partial</span>}
       </div>
@@ -294,27 +229,77 @@ const LearningTable = memo(({ table, state, onStateChange }) => {
   );
 });
 
-const UniversityTrendChart = memo(({ data, granularity, onGranularityChange }) => (
-  <div className="chart-card glass-panel wide">
-    <div className="chart-card-header">
-      <h3 className="chart-title">New Registrations vs Active Users</h3>
-      <ChartGranularityControl value={granularity} onChange={onGranularityChange} compact />
+const UniversityTrendChart = memo(({ data, granularityLabel, visibleSeries, onToggleSeries }) => {
+  const hasVisibleSeries = UNIVERSITY_TREND_SERIES.some((series) => visibleSeries[series.key]);
+
+  return (
+    <div className="chart-card glass-panel wide">
+      <div className="chart-card-header">
+        <div>
+          <h3 className="chart-title">New Registrations, Enrollees, and Active Users</h3>
+          <p className="chart-support-copy">Time buckets are grouped automatically by {granularityLabel}.</p>
+        </div>
+      </div>
+      <div className="chart-wrapper">
+        {data.length > 0 && hasVisibleSeries ? (
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart data={data} margin={{ top: 10, right: 20, left: 0, bottom: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke={GRID_STROKE} vertical={false} />
+              <XAxis dataKey="periodLabel" stroke={AXIS_STROKE} tick={AXIS_TICK} tickMargin={10} minTickGap={24} />
+              <YAxis stroke={AXIS_STROKE} tick={AXIS_TICK} />
+              <Tooltip content={<BaseTooltip />} />
+              {UNIVERSITY_TREND_SERIES.filter((series) => visibleSeries[series.key]).map((series) => (
+                <Line
+                  key={series.key}
+                  type="monotone"
+                  dataKey={series.key}
+                  name={series.label}
+                  stroke={series.color}
+                  strokeWidth={2.5}
+                  dot={false}
+                  activeDot={{ r: 4 }}
+                />
+              ))}
+            </LineChart>
+          </ResponsiveContainer>
+        ) : hasVisibleSeries ? (
+          <EmptyPanel title="No university trend data" message="No dated LearnWorlds activity matches the selected range." />
+        ) : (
+          <EmptyPanel title="No university trend data" message="Select at least one series to display the trend." />
+        )}
+      </div>
+      <div className="dashboard-series-toggles">
+        {UNIVERSITY_TREND_SERIES.map((series) => (
+          <button
+            key={series.key}
+            type="button"
+            className={`dashboard-series-toggle ${visibleSeries[series.key] ? 'active' : ''}`}
+            onClick={() => onToggleSeries(series.key)}
+          >
+            <span className="dashboard-series-dot" style={{ backgroundColor: series.color }}></span>
+            <span>{series.label}</span>
+          </button>
+        ))}
+      </div>
     </div>
-    <div className="chart-wrapper">
-      {data.length > 0 ? (
-        <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={data} margin={{ top: 10, right: 20, left: 0, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke={GRID_STROKE} vertical={false} />
-            <XAxis dataKey="periodLabel" stroke={AXIS_STROKE} tick={AXIS_TICK} tickMargin={10} minTickGap={24} />
-            <YAxis stroke={AXIS_STROKE} tick={AXIS_TICK} />
-            <Tooltip content={<BaseTooltip />} />
-            <Line type="monotone" dataKey="lw_new_registrations" name="New registrations" stroke="#0f766e" strokeWidth={2.5} dot={false} activeDot={{ r: 4 }} />
-            <Line type="monotone" dataKey="lw_active_users" name="Active users" stroke="#0891b2" strokeWidth={2.5} dot={false} activeDot={{ r: 4 }} />
-          </LineChart>
-        </ResponsiveContainer>
-      ) : (
-        <EmptyPanel title="No university trend data" message="No dated LearnWorlds activity matches the selected range." />
-      )}
+  );
+});
+
+const UniversityTopControls = memo(({
+  dateRange,
+  onDateRangeChange,
+  anchorDate,
+}) => (
+  <div className="workspace-controls-row">
+    <div className="workspace-controls-group">
+      <div className="workspace-control-field">
+        <span>Report period</span>
+        <ReportPeriodControl
+          dateRange={dateRange}
+          onDateRangeChange={onDateRangeChange}
+          anchorDate={anchorDate}
+        />
+      </div>
     </div>
   </div>
 ));
@@ -322,8 +307,9 @@ const UniversityTrendChart = memo(({ data, granularity, onGranularityChange }) =
 const UniversityContent = memo(({
   learningViewModel,
   trendData,
-  trendGranularity,
-  onTrendGranularityChange,
+  trendGranularityLabel,
+  visibleSeries,
+  onToggleSeries,
   tableState,
   onTableStateChange,
 }) => (
@@ -333,8 +319,9 @@ const UniversityContent = memo(({
     <div className="charts-container">
       <UniversityTrendChart
         data={trendData}
-        granularity={trendGranularity}
-        onGranularityChange={onTrendGranularityChange}
+        granularityLabel={trendGranularityLabel}
+        visibleSeries={visibleSeries}
+        onToggleSeries={onToggleSeries}
       />
     </div>
 
@@ -363,8 +350,20 @@ export const ThreecoltsUniversitySummarySection = memo(({
   sharedDateRange,
   comparisonGranularity,
 }) => {
-  const [trendGranularity, setTrendGranularity] = useState('weekly');
   const [tableState, setTableState] = useState({});
+  const [visibleSeries, setVisibleSeries] = useState({
+    lw_new_registrations: true,
+    lw_enrollees: true,
+    lw_active_users: true,
+  });
+  const trendGranularity = useMemo(
+    () => inferReportPeriodGranularity(sharedDateRange),
+    [sharedDateRange]
+  );
+  const trendGranularityLabel = useMemo(
+    () => getReportPeriodGranularityLabel(trendGranularity),
+    [trendGranularity]
+  );
 
   const learningViewModel = useMemo(
     () => buildLearnWorldsDashboardViewModel(normalizedData, sharedDateRange, comparisonGranularity),
@@ -382,12 +381,23 @@ export const ThreecoltsUniversitySummarySection = memo(({
     }));
   };
 
+  const handleToggleSeries = (key) => {
+    setVisibleSeries((previous) => ({
+      ...previous,
+      [key]:
+        previous[key] && Object.values(previous).filter(Boolean).length === 1
+          ? true
+          : !previous[key],
+    }));
+  };
+
   return (
     <UniversityContent
       learningViewModel={learningViewModel}
       trendData={trendData}
-      trendGranularity={trendGranularity}
-      onTrendGranularityChange={setTrendGranularity}
+      trendGranularityLabel={trendGranularityLabel}
+      visibleSeries={visibleSeries}
+      onToggleSeries={handleToggleSeries}
       tableState={tableState}
       onTableStateChange={handleTableStateChange}
     />
@@ -399,26 +409,20 @@ export const ThreecoltsUniversityWorkspace = memo(({
   loading,
   error,
   sharedDateRange,
+  onSharedDateRangeChange,
   comparisonGranularity,
 }) => {
-  const [learningFilters, setLearningFilters] = useState(EMPTY_FILTERS);
-  const [trendGranularity, setTrendGranularity] = useState('weekly');
   const [tableState, setTableState] = useState({});
+  const trendGranularity = useMemo(
+    () => inferReportPeriodGranularity(sharedDateRange),
+    [sharedDateRange]
+  );
+  const trendGranularityLabel = useMemo(
+    () => getReportPeriodGranularityLabel(trendGranularity),
+    [trendGranularity]
+  );
 
-  const filterOptions = useMemo(() => {
-    if (!normalizedData) {
-      return {
-        courses: [],
-        authors: [],
-        categories: [],
-        accessTypes: [],
-      };
-    }
-
-    return getLearnWorldsFilterOptions(normalizedData);
-  }, [normalizedData]);
-
-  const baseViewModel = useMemo(() => {
+  const learningViewModel = useMemo(() => {
     if (!normalizedData) {
       return null;
     }
@@ -430,59 +434,13 @@ export const ThreecoltsUniversityWorkspace = memo(({
     );
   }, [normalizedData, sharedDateRange, comparisonGranularity]);
 
-  const presetViews = useMemo(
-    () => (baseViewModel ? buildPresetViews(baseViewModel) : []),
-    [baseViewModel]
-  );
-  const activePreset = useMemo(() => {
-    if (!presetViews.length) {
-      return '';
-    }
-
-    return presetViews.find((preset) => filtersMatch(learningFilters, preset.filters))?.id ?? '';
-  }, [learningFilters, presetViews]);
-
-  const filteredData = useMemo(() => {
-    if (!normalizedData) {
-      return null;
-    }
-
-    return applyLearnWorldsFilters(normalizedData, learningFilters);
-  }, [normalizedData, learningFilters]);
-
-  const learningViewModel = useMemo(() => {
-    if (!filteredData) {
-      return null;
-    }
-
-    return buildLearnWorldsDashboardViewModel(
-      filteredData,
-      sharedDateRange,
-      comparisonGranularity
-    );
-  }, [filteredData, sharedDateRange, comparisonGranularity]);
-
   const trendData = useMemo(() => {
-    if (!filteredData) {
+    if (!normalizedData) {
       return [];
     }
 
-    return buildLearnWorldsCombinedTrend(filteredData, sharedDateRange, trendGranularity);
-  }, [filteredData, sharedDateRange, trendGranularity]);
-
-  const handleFilterChange = (updater) => {
-    setLearningFilters((previous) => updater(previous));
-  };
-
-  const handlePresetChange = (presetId) => {
-    const preset = presetViews.find((item) => item.id === presetId);
-
-    if (!preset) {
-      return;
-    }
-
-    setLearningFilters(preset.filters);
-  };
+    return buildLearnWorldsCombinedTrend(normalizedData, sharedDateRange, trendGranularity);
+  }, [normalizedData, sharedDateRange, trendGranularity]);
 
   const handleTableStateChange = (tableId, updater) => {
     setTableState((previous) => ({
@@ -505,26 +463,20 @@ export const ThreecoltsUniversityWorkspace = memo(({
 
   return (
     <div className="workspace-panel">
-      <LearningFilters
-        filters={learningFilters}
+      <UniversityTopControls
         dateRange={sharedDateRange}
-        filterOptions={filterOptions}
-        granularity={comparisonGranularity}
-        presets={presetViews}
-        activePreset={activePreset}
-        onFilterChange={handleFilterChange}
-        onDateRangeChange={() => {}}
-        onGranularityChange={() => {}}
-        onPresetChange={handlePresetChange}
-        showDateControls={false}
-        showGranularityControl={false}
+        onDateRangeChange={onSharedDateRangeChange}
+        anchorDate={
+          normalizedData?.dateBounds?.progress_activity_at?.maxDate ||
+          normalizedData?.dateBounds?.enrollment_created_at?.maxDate ||
+          normalizedData?.dateBounds?.user_created_at?.maxDate
+        }
       />
 
       <UniversityContent
         learningViewModel={learningViewModel}
         trendData={trendData}
-        trendGranularity={trendGranularity}
-        onTrendGranularityChange={setTrendGranularity}
+        trendGranularityLabel={trendGranularityLabel}
         tableState={tableState}
         onTableStateChange={handleTableStateChange}
       />

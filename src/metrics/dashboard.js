@@ -1,11 +1,18 @@
 import { applyMetricFilters } from './filtering.js';
-import { calculateMetricSet, metricSpecsById, NEW_CONVERSATION_PROXY_STARTED_BY } from './specs.js';
+import metricSpecExports from './specs.js';
 import {
   buildPreviousPeriodRange,
   formatDateRangeLabel,
   getGranularityLabel,
   listBucketsInRange,
 } from './time.js';
+import { inferReportPeriodGranularity } from '../utils/reportPeriod.js';
+
+const {
+  calculateMetricSet,
+  metricSpecsById,
+  NEW_CONVERSATION_PROXY_STARTED_BY,
+} = metricSpecExports;
 
 export const INTERCOM_SECTION_CONFIG = {
   overview: {
@@ -30,12 +37,106 @@ export const INTERCOM_SECTION_CONFIG = {
 };
 
 const TOPIC_LIMIT = 6;
+const GENERIC_TOPIC_LABELS = new Set(['customer ticket', 'support request']);
+const RESOLVED_FIN_FLOW_STATES = new Set(['Confirmed resolved', 'Assumed resolved']);
+const TOPIC_FALLBACK_RULES = [
+  {
+    label: 'Billing & cancellations',
+    keywords: ['billing', 'cancel', 'cancellation', 'refund', 'subscription', 'payment', 'invoice', 'pricing'],
+  },
+  {
+    label: 'Troubleshooting',
+    keywords: ['bug', 'error', 'issue', 'login', 'password', 'access', 'broken', 'troubleshoot', 'not working', 'fail'],
+  },
+  {
+    label: 'Amazon operations',
+    keywords: ['amazon', 'asin', 'fba', 'listing', 'seller central', 'sku', 'inventory'],
+  },
+  {
+    label: 'InventoryLab',
+    keywords: ['inventorylab', 'inventory lab'],
+  },
+  {
+    label: 'ScoutIQ',
+    keywords: ['scoutiq', 'scout iq'],
+  },
+  {
+    label: 'Tactical Arbitrage',
+    keywords: ['tactical arbitrage'],
+  },
+  {
+    label: 'SmartRepricer',
+    keywords: ['smartrepricer', 'smart repricer', 'repricer'],
+  },
+  {
+    label: 'FeedbackWhiz',
+    keywords: ['feedbackwhiz', 'feedback whiz'],
+  },
+  {
+    label: 'SellerRunning',
+    keywords: ['sellerrunning', 'seller running'],
+  },
+  {
+    label: 'Onboarding & setup',
+    keywords: ['onboarding', 'setup', 'set up', 'quick start', 'getting started', 'connect', 'integration', 'install'],
+  },
+];
 
 const splitTopics = (value) =>
   (value || '')
     .split(',')
     .map((item) => item.trim())
     .filter(Boolean);
+
+const hasTopicFields = (items) =>
+  items.some((item) => Boolean(item.topic || item.subtopic));
+
+const splitListValues = (value) =>
+  (value || '')
+    .split(/[,\n|]/)
+    .map((item) => item.trim())
+    .filter(Boolean);
+
+const normalizeForMatch = (value) => String(value || '').toLowerCase();
+
+const deriveFallbackTopics = (item) => {
+  const structuredCandidates = [
+    ...splitListValues(item.topic),
+    ...splitListValues(item.subtopic),
+    ...splitListValues(item.ticket_category),
+    ...splitListValues(item.conversation_tag),
+    ...splitListValues(item.ticket_type),
+  ]
+    .filter(Boolean)
+    .filter((candidate) => !GENERIC_TOPIC_LABELS.has(normalizeForMatch(candidate)));
+
+  if (structuredCandidates.length > 0) {
+    return {
+      topics: [...new Set(structuredCandidates)],
+      source: item.topic || item.subtopic ? 'native_topic' : 'structured_fallback',
+    };
+  }
+
+  const textHaystack = normalizeForMatch(
+    [item.title, item.ai_issue_summary, item.conversation_source].filter(Boolean).join(' ')
+  );
+
+  if (!textHaystack) {
+    return {
+      topics: [],
+      source: 'none',
+    };
+  }
+
+  const matchedRules = TOPIC_FALLBACK_RULES.filter((rule) =>
+    rule.keywords.some((keyword) => textHaystack.includes(keyword))
+  ).map((rule) => rule.label);
+
+  return {
+    topics: [...new Set(matchedRules)],
+    source: matchedRules.length > 0 ? 'keyword_fallback' : 'none',
+  };
+};
 
 const countBy = (items, valueGetter) => {
   const counts = new Map();
@@ -51,6 +152,39 @@ const countBy = (items, valueGetter) => {
   });
 
   return [...counts.entries()].map(([name, value]) => ({ name, value }));
+};
+
+const cleanSummaryText = (value) =>
+  String(value || '')
+    .replace(/\s+/g, ' ')
+    .replace(/[.]+$/g, '')
+    .trim();
+
+const formatClusterSummary = (issueSummaries = [], subtopics = []) => {
+  const topSummaries = issueSummaries
+    .map((entry) => cleanSummaryText(entry.name))
+    .filter(Boolean)
+    .slice(0, 3);
+
+  if (topSummaries.length > 1) {
+    const joined = topSummaries.join('; ');
+    return `Most tickets in this topic mention: ${joined}.`;
+  }
+
+  if (topSummaries.length === 1) {
+    return `Most tickets in this topic mention: ${topSummaries[0]}.`;
+  }
+
+  const topSubtopics = subtopics
+    .map((entry) => cleanSummaryText(entry.name))
+    .filter(Boolean)
+    .slice(0, 3);
+
+  if (topSubtopics.length > 0) {
+    return `This topic mainly covers ${topSubtopics.join(', ')}.`;
+  }
+
+  return null;
 };
 
 const sortDescending = (items) => [...items].sort((left, right) => right.value - left.value);
@@ -238,6 +372,13 @@ const filterStartedAtConversations = (normalizedData, filters) =>
     }
   ).items;
 
+const filterAllConversations = (normalizedData, filters) =>
+  applyMetricFilters(normalizedData.conversations, filters, {
+    timestampField: 'started_at',
+    teamField: 'team_name',
+    teammateFields: ['teammate_name'],
+  }).items;
+
 const filterOverallRatings = (normalizedData, filters) =>
   applyMetricFilters(
     normalizedData.ratings.filter((rating) => rating.rating_source === 'satisfaction'),
@@ -291,7 +432,9 @@ const buildTopicExplorerDataFromItems = (items, ratings, { includeFinState = fal
   const topicMap = new Map();
 
   items.forEach((item) => {
-    splitTopics(item.topic).forEach((topicName) => {
+    const derived = deriveFallbackTopics(item);
+
+    derived.topics.forEach((topicName) => {
       const current = topicMap.get(topicName) || {
         name: topicName,
         value: 0,
@@ -302,6 +445,8 @@ const buildTopicExplorerDataFromItems = (items, ratings, { includeFinState = fal
         channels: new Map(),
         teams: new Map(),
         finStates: new Map(),
+        sources: new Map(),
+        issueSummaries: new Map(),
       };
 
       current.value += 1;
@@ -320,6 +465,15 @@ const buildTopicExplorerDataFromItems = (items, ratings, { includeFinState = fal
         current.subtopics.set(item.subtopic, (current.subtopics.get(item.subtopic) || 0) + 1);
       }
 
+      if (item.ai_issue_summary) {
+        current.issueSummaries.set(
+          item.ai_issue_summary,
+          (current.issueSummaries.get(item.ai_issue_summary) || 0) + 1
+        );
+      } else if (item.title) {
+        current.issueSummaries.set(item.title, (current.issueSummaries.get(item.title) || 0) + 1);
+      }
+
       if (item.channel) {
         current.channels.set(item.channel, (current.channels.get(item.channel) || 0) + 1);
       }
@@ -334,6 +488,8 @@ const buildTopicExplorerDataFromItems = (items, ratings, { includeFinState = fal
           (current.finStates.get(item.fin_resolution_state) || 0) + 1
         );
       }
+
+      current.sources.set(derived.source, (current.sources.get(derived.source) || 0) + 1);
 
       topicMap.set(topicName, current);
     });
@@ -364,6 +520,17 @@ const buildTopicExplorerDataFromItems = (items, ratings, { includeFinState = fal
         .slice(0, 3)
         .map(([name, count]) => ({ name, count })),
       conversationCount: entry.conversationIds.size || entry.value,
+      topicSources: [...entry.sources.entries()]
+        .sort((left, right) => right[1] - left[1])
+        .map(([name, count]) => ({ name, count })),
+      issueSummaries: [...entry.issueSummaries.entries()]
+        .sort((left, right) => right[1] - left[1])
+        .slice(0, 3)
+        .map(([name, count]) => ({ name, count })),
+    }))
+    .map((entry) => ({
+      ...entry,
+      issueSummary: formatClusterSummary(entry.issueSummaries, entry.subtopics),
     }))
     .sort((left, right) => right.value - left.value)
     .slice(0, TOPIC_LIMIT);
@@ -439,6 +606,22 @@ export const buildIntercomTopicExplorerData = (
   return buildTopicExplorerDataFromItems(conversations, ratings);
 };
 
+export const getIntercomTopicAvailability = (
+  normalizedData,
+  filters,
+  variant = 'all'
+) => {
+  const items =
+    variant === 'fin'
+      ? filterFinOutcomes(normalizedData, filters)
+      : filterStartedAtConversations(normalizedData, filters);
+
+  return {
+    hasRows: items.length > 0,
+    hasTopicData: items.some((item) => deriveFallbackTopics(item).topics.length > 0),
+  };
+};
+
 export const buildIntercomCsatBreakdown = (
   normalizedData,
   filters,
@@ -465,6 +648,257 @@ export const buildIntercomOverviewSummary = (
   topFinTopics: buildIntercomTopicExplorerData(normalizedData, filters, 'fin'),
   csat: buildIntercomCsatBreakdown(normalizedData, filters, 'all'),
 });
+
+const bucketConversationState = (value) => {
+  const normalized = String(value || '').trim().toLowerCase();
+
+  if (!normalized) {
+    return 'Open / in progress';
+  }
+
+  if (normalized.includes('closed')) {
+    return 'Closed';
+  }
+
+  if (normalized.includes('pending') || normalized.includes('snooz')) {
+    return 'Pending';
+  }
+
+  if (normalized.includes('open')) {
+    return 'Open / in progress';
+  }
+
+  return 'Open / in progress';
+};
+
+const buildFlowNodeLabel = (label, value, total) => {
+  const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
+  return `${label} • ${value.toLocaleString()} (${percentage}%)`;
+};
+
+const buildFlowNodeChange = (currentValue, previousValue) => {
+  if (!Number.isFinite(previousValue) || previousValue <= 0) {
+    return null;
+  }
+
+  const deltaPercent = ((currentValue - previousValue) / previousValue) * 100;
+  const rounded = Math.round(deltaPercent);
+  const sign = rounded > 0 ? '+' : '';
+
+  return {
+    deltaPercent,
+    label: `${sign}${rounded}% vs prev`,
+  };
+};
+
+const categorizeConversationFlow = (conversations) => {
+  const finInvolvedItems = conversations.filter((item) => item.fin_involved);
+  const noFinItems = conversations.filter((item) => !item.fin_involved);
+  const finResolvedItems = finInvolvedItems.filter((item) => RESOLVED_FIN_FLOW_STATES.has(item.fin_resolution_state));
+  const finEscalatedItems = finInvolvedItems.filter((item) => item.fin_resolution_state === 'Escalated');
+  const finOpenItems = finInvolvedItems.filter(
+    (item) => !RESOLVED_FIN_FLOW_STATES.has(item.fin_resolution_state) && item.fin_resolution_state !== 'Escalated'
+  );
+  const closedItems = noFinItems.filter((item) => bucketConversationState(item.current_state) === 'Closed');
+  const pendingItems = noFinItems.filter((item) => bucketConversationState(item.current_state) === 'Pending');
+  const openItems = noFinItems.filter((item) => bucketConversationState(item.current_state) === 'Open / in progress');
+
+  return {
+    total: conversations.length,
+    finInvolvedItems,
+    noFinItems,
+    finResolvedItems,
+    finEscalatedItems,
+    finOpenItems,
+    closedItems,
+    pendingItems,
+    openItems,
+  };
+};
+
+export const inferIntercomTrendGranularity = (filters) => {
+  return inferReportPeriodGranularity(filters);
+};
+
+export const buildIntercomConversationFlow = (normalizedData, filters) => {
+  const conversations = filterAllConversations(normalizedData, filters);
+  const grouped = categorizeConversationFlow(conversations);
+  const total = grouped.total;
+  const flowGranularity = inferIntercomTrendGranularity(filters);
+
+  const previousRange = buildPreviousPeriodRange(
+    filters.startDate,
+    filters.endDate,
+    flowGranularity
+  );
+  const previousFilters = previousRange
+    ? {
+        ...filters,
+        startDate: previousRange.startDate,
+        endDate: previousRange.endDate,
+      }
+    : null;
+  const previousGrouped = previousFilters
+    ? categorizeConversationFlow(filterAllConversations(normalizedData, previousFilters))
+    : null;
+
+  if (total === 0) {
+    return {
+      total: 0,
+      nodes: [],
+      links: [],
+      note: 'No conversations match the selected reporting period.',
+      stagesUsed: [],
+    };
+  }
+
+  const nodes = [
+    {
+      id: 'total',
+      label: 'Total conversations',
+      value: total,
+      displayLabel: buildFlowNodeLabel('Total conversations', total, total),
+      stage: 0,
+    },
+    {
+      id: 'fin_involved',
+      label: 'Fin AI involved',
+      value: grouped.finInvolvedItems.length,
+      displayLabel: buildFlowNodeLabel('Fin AI involved', grouped.finInvolvedItems.length, total),
+      stage: 1,
+    },
+    {
+      id: 'no_fin',
+      label: 'No Fin AI',
+      value: grouped.noFinItems.length,
+      displayLabel: buildFlowNodeLabel('No Fin AI', grouped.noFinItems.length, total),
+      stage: 1,
+    },
+  ];
+
+  const links = [
+    { source: 0, target: 1, value: grouped.finInvolvedItems.length },
+    { source: 0, target: 2, value: grouped.noFinItems.length },
+  ];
+
+  const appendNode = (parentIndex, nodeId, label, items, previousValue, meta = {}) => {
+    if (!items.length) {
+      return;
+    }
+
+    const change = buildFlowNodeChange(items.length, previousValue);
+    const nodeIndex = nodes.length;
+    nodes.push({
+      id: nodeId,
+      label,
+      value: items.length,
+      displayLabel: buildFlowNodeLabel(label, items.length, total),
+      stage: 2,
+      change,
+      status: meta.status || 'neutral',
+      insight: meta.insight || '',
+    });
+    links.push({
+      source: parentIndex,
+      target: nodeIndex,
+      value: items.length,
+    });
+  };
+
+  const finResolvedShare = grouped.finInvolvedItems.length > 0
+    ? grouped.finResolvedItems.length / grouped.finInvolvedItems.length
+    : 0;
+  const finEscalatedShare = grouped.finInvolvedItems.length > 0
+    ? grouped.finEscalatedItems.length / grouped.finInvolvedItems.length
+    : 0;
+  const openShare = grouped.noFinItems.length > 0
+    ? grouped.openItems.length / grouped.noFinItems.length
+    : 0;
+  const pendingShare = grouped.noFinItems.length > 0
+    ? grouped.pendingItems.length / grouped.noFinItems.length
+    : 0;
+  const finOpenShare = grouped.finInvolvedItems.length > 0
+    ? grouped.finOpenItems.length / grouped.finInvolvedItems.length
+    : 0;
+
+  appendNode(
+    1,
+    'fin_resolved',
+    'Fin resolved',
+    grouped.finResolvedItems,
+    previousGrouped?.finResolvedItems.length ?? 0,
+    {
+      status: finResolvedShare < 0.55 ? 'warning' : 'good',
+      insight: finResolvedShare < 0.55 ? 'Low resolution share' : 'Healthy resolution share',
+    }
+  );
+  appendNode(
+    1,
+    'fin_escalated',
+    'Fin escalated',
+    grouped.finEscalatedItems,
+    previousGrouped?.finEscalatedItems.length ?? 0,
+    {
+      status: finEscalatedShare >= 0.35 ? 'warning' : 'neutral',
+      insight: finEscalatedShare >= 0.35 ? 'High escalation share' : '',
+    }
+  );
+  appendNode(
+    1,
+    'fin_open',
+    'Fin still open',
+    grouped.finOpenItems,
+    previousGrouped?.finOpenItems.length ?? 0,
+    {
+      status: finOpenShare >= 0.25 ? 'warning' : 'neutral',
+      insight: finOpenShare >= 0.25 ? 'High unresolved Fin volume' : '',
+    }
+  );
+
+  appendNode(
+    2,
+    'non_fin_closed',
+    'Closed',
+    grouped.closedItems,
+    previousGrouped?.closedItems.length ?? 0,
+    { status: 'good' }
+  );
+  appendNode(
+    2,
+    'non_fin_open',
+    'Open / in progress',
+    grouped.openItems,
+    previousGrouped?.openItems.length ?? 0,
+    {
+      status: openShare >= 0.22 ? 'warning' : 'neutral',
+      insight: openShare >= 0.22 ? 'High open volume' : '',
+    }
+  );
+  appendNode(
+    2,
+    'non_fin_pending',
+    'Pending',
+    grouped.pendingItems,
+    previousGrouped?.pendingItems.length ?? 0,
+    {
+      status: pendingShare >= 0.18 ? 'warning' : 'neutral',
+      insight: pendingShare >= 0.18 ? 'High pending volume' : '',
+    }
+  );
+
+  return {
+    total,
+    nodes,
+    links,
+      note:
+      'Flow uses supported states only: Fin AI involvement, Fin resolution state, and current conversation state.',
+    stagesUsed: [
+      'Total conversations',
+      'Fin AI involved / No Fin AI',
+      'Fin resolved / escalated / still open or conversation state',
+    ],
+  };
+};
 
 export const buildDashboardViewModel = (
   normalizedData,

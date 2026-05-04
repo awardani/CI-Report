@@ -1,10 +1,12 @@
-import { createLearnWorldsApiHttpHandler } from '../../server/learnworlds/apiAdapter.js';
-
-const handlerImpl = createLearnWorldsApiHttpHandler();
+import {
+  normalizeLearnWorldsRequestMode,
+  resolveLearnWorldsSource,
+} from '../../server/learnworlds/sourceResolver.js';
 
 export const handler = async () => {
   try {
-    const payload = await handlerImpl();
+    const mode = normalizeLearnWorldsRequestMode('snapshot');
+    const payload = await resolveLearnWorldsSource({ requestMode: mode });
 
     return {
       statusCode: 200,
@@ -12,7 +14,10 @@ export const handler = async () => {
         'Content-Type': 'application/json',
         'Cache-Control': 'no-store',
       },
-      body: JSON.stringify(payload),
+      body: JSON.stringify({
+        success: true,
+        data: payload,
+      }),
     };
   } catch (error) {
     return {
@@ -22,6 +27,7 @@ export const handler = async () => {
         'Cache-Control': 'no-store',
       },
       body: JSON.stringify({
+        success: false,
         error: 'Failed to load LearnWorlds API datasets.',
         detail: error.message,
       }),

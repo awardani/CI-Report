@@ -18,7 +18,8 @@ export const loadIntercomServerEnv = ({ rootDir = process.cwd(), env = process.e
     apiBaseUrl: merged.INTERCOM_API_BASE_URL || 'https://api.intercom.io',
     initialBackfillDays: Number.parseInt(merged.INTERCOM_INITIAL_BACKFILL_DAYS || '120', 10),
     lookupCacheTtlMs: Number.parseInt(merged.INTERCOM_LOOKUP_CACHE_TTL_MS || `${6 * 60 * 60 * 1000}`, 10),
-    datasetCacheTtlMs: Number.parseInt(merged.INTERCOM_DATASET_CACHE_TTL_MS || `${5 * 60 * 1000}`, 10),
+    datasetCacheTtlMs: Number.parseInt(merged.INTERCOM_DATASET_CACHE_TTL_MS || '60000', 10),
+    requestTimeoutMs: Number.parseInt(merged.INTERCOM_REQUEST_TIMEOUT_MS || '15000', 10),
   };
 };
 

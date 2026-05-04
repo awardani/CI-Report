@@ -11,6 +11,8 @@ node_modules
 dist
 dist-ssr
 *.local
+server/data/learnworlds/*.json
+server/learnworlds/data/*.json
 
 # Editor directories and files
 .vscode/*

@@ -22,6 +22,10 @@ const RAW_FIELDS = {
   subtopic: 'AI Subtopic',
   channel: 'Channel',
   ticketType: 'Ticket type',
+  conversationTag: 'Conversation tag',
+  ticketCategory: 'Ticket category',
+  title: 'Title',
+  aiIssueSummary: 'AI Issue summary',
   firstResponseSeconds: 'First response time (seconds)',
   userName: 'User name',
   companyName: 'Company name',
@@ -81,10 +85,17 @@ const buildConversationRecord = (row) => ({
   fin_involved: normalizeBoolean(row[RAW_FIELDS.finInvolved]),
   fin_deflected: normalizeBoolean(row[RAW_FIELDS.finDeflected]),
   fin_resolution_state: normalizeText(row[RAW_FIELDS.finResolutionState]),
-  topic: normalizeText(row[RAW_FIELDS.topic]) || normalizeText(row[RAW_FIELDS.fallbackTopic]),
+  topic:
+    normalizeText(row[RAW_FIELDS.fallbackTopic]) ||
+    normalizeText(row[RAW_FIELDS.topic]) ||
+    normalizeText(row[RAW_FIELDS.subtopic]),
   subtopic: normalizeText(row[RAW_FIELDS.subtopic]),
   channel: normalizeText(row[RAW_FIELDS.channel]),
   ticket_type: normalizeText(row[RAW_FIELDS.ticketType]),
+  conversation_tag: normalizeText(row[RAW_FIELDS.conversationTag]),
+  ticket_category: normalizeText(row[RAW_FIELDS.ticketCategory]),
+  title: normalizeText(row[RAW_FIELDS.title]),
+  ai_issue_summary: normalizeText(row[RAW_FIELDS.aiIssueSummary]),
   first_response_seconds: normalizeInteger(row[RAW_FIELDS.firstResponseSeconds]),
 });
 
@@ -131,6 +142,12 @@ const buildFinOutcomeRecord = (conversation, deflectionDetailsById, resolutionDe
     fin_resolution_state: conversation.fin_resolution_state,
     topic: conversation.topic ?? deflectionDetails?.topic ?? resolutionDetails?.topic ?? null,
     subtopic: conversation.subtopic ?? deflectionDetails?.subtopic ?? resolutionDetails?.subtopic ?? null,
+    conversation_tag: conversation.conversation_tag,
+    ticket_category: conversation.ticket_category,
+    ticket_type: conversation.ticket_type,
+    title: conversation.title,
+    ai_issue_summary: conversation.ai_issue_summary,
+    channel: conversation.channel,
     validation: {
       has_deflection_detail: Boolean(deflectionDetails),
       has_resolution_detail: Boolean(resolutionDetails),
@@ -153,7 +170,10 @@ const buildFinDetailMap = (rows, type) =>
         return [
           conversationId,
           {
-            topic: normalizeText(row[RAW_FIELDS.topic]) || normalizeText(row[RAW_FIELDS.fallbackTopic]),
+            topic:
+              normalizeText(row[RAW_FIELDS.fallbackTopic]) ||
+              normalizeText(row[RAW_FIELDS.topic]) ||
+              normalizeText(row[RAW_FIELDS.subtopic]),
             subtopic: normalizeText(row[RAW_FIELDS.subtopic]),
             fin_deflected: type === 'deflection' ? normalizeBoolean(row[RAW_FIELDS.finDeflected]) : null,
             fin_resolution_state:
